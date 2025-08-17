@@ -2,9 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import TripCard from '../components/TripCard';
 import { listTrips } from '../services/trips';
 import { useAuth } from '../context/auth';
-import { openRazorpay } from '../services/razorpay';
-import { createBookingWithId, updateBooking } from '../services/bookings';
-import { createPaymentWithId, updatePayment } from '../services/payments';
+import { createBookingWithId } from '../services/bookings';
+import { createPaymentWithId } from '../services/payments';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
@@ -34,72 +33,29 @@ export default function HomePage() {
 
   const pay = async (trip) => {
     if (!user) return;
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || '/api';
-    const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
-    const orderRes = await fetch(`${backendUrl}/create-order`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: Number(trip.price) * 100, currency: 'INR', receipt: `trip_${trip.id}`, trip, userId: user.$id }),
-      credentials: 'include',
-    }).then((r) => r.json());
-
-    // If server cannot record bookings, create a pending booking client-side
-    if (!orderRes.serverCreatesBookings) {
-      const now = new Date().toISOString();
-      try {
-        await createBookingWithId({ id: orderRes.id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
-      } catch (e) { console.warn('Client pending booking create failed (permissions?):', e?.message || e); }
+    // Create a client-side pending booking and payment record so the user
+    // is marked as having initiated a booking even without server-side flow.
+    const now = new Date().toISOString();
+    const id = `upi_${Date.now()}`;
+    try {
+      await createBookingWithId({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
+    } catch (e) {
+      console.warn('Client pending booking create failed (permissions?):', e?.message || e);
     }
 
-    if (!orderRes.serverCreatesPayments) {
-      const now = new Date().toISOString();
-      try {
-        await createPaymentWithId({ id: orderRes.id, data: { orderId: orderRes.id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } });
-      } catch (e) { console.warn('Client pending payment create failed (permissions?):', e?.message || e); }
+    try {
+      await createPaymentWithId({ id, data: { orderId: id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } });
+    } catch (e) {
+      console.warn('Client pending payment create failed (permissions?):', e?.message || e);
     }
-    await openRazorpay({
-      key,
-      order: orderRes,
-      user,
-      onSuccess: async (resp) => {
-        try {
-          const resp2 = await fetch(`${backendUrl}/verify-payment`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order: orderRes, razorpay: resp, trip, userId: user.$id }),
-          }).then((r) => r.json());
-          if (!resp2?.recorded) {
-            try {
-              await updateBooking({ id: orderRes.id, status: 'paid', date: new Date().toISOString() });
-            } catch (e) { console.warn('Client booking update to paid failed:', e?.message || e); }
-          }
-          if (!resp2?.paymentsRecorded) {
-            try {
-              await updatePayment({ id: orderRes.id, data: { status: 'paid', paymentId: resp.razorpay_payment_id, signature: resp.razorpay_signature, date: new Date().toISOString() } });
-            } catch (e) { console.warn('Client payment update to paid failed:', e?.message || e); }
-          }
-        } catch (e) { console.error(e); }
-      },
-      onFailure: async (failure) => {
-        try {
-          const resp3 = await fetch(`${backendUrl}/record-payment-failure`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order: orderRes, trip, userId: user.$id, failure }),
-          }).then((r) => r.json());
-          if (!resp3?.recorded) {
-            try {
-              await updateBooking({ id: orderRes.id, status: 'failed', date: new Date().toISOString() });
-            } catch (e) { console.warn('Client booking update to failed failed:', e?.message || e); }
-          }
-          if (!resp3?.paymentsRecorded) {
-            try {
-              await updatePayment({ id: orderRes.id, data: { status: 'failed', failure, date: new Date().toISOString() } });
-            } catch (e) { console.warn('Client payment update to failed failed:', e?.message || e); }
-          }
-        } catch (e) { console.error(e); }
-      }
-    });
+
+    // Open Razorpay.me UPI link in a new tab for the user to complete payment.
+    // Replace this URL with your desired Razorpay.me link (UPI) if it changes.
+    const upiLink = 'http://razorpay.me/@mayanksoni8625';
+    window.open(upiLink, '_blank', 'noopener');
+
+    // Optionally show a toast/modal instructing the user to return after payment
+    // so an admin or an automated process can verify and mark the booking paid.
   };
 
   return (
