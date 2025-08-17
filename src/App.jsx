@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
-import HomePage from "./pages/HomePage";
-import TripsPage from "./pages/TripsPage";
-import BookingsPage from "./pages/BookingsPage";
-import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+import { lazy, Suspense } from 'react';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const TripsPage = lazy(() => import('./pages/TripsPage'));
+const BookingsPage = lazy(() => import('./pages/BookingsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const SignupPage = lazy(() => import('./pages/SignupPage'));
 import AuthProvider from "./context/AuthContext";
 import { useAuth } from "./context/auth";
-import AdminPage from "./pages/AdminPage";
-import TripDetailsPage from "./pages/TripDetailsPage";
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const TripDetailsPage = lazy(() => import('./pages/TripDetailsPage'));
 import { AnimatePresence } from 'framer-motion';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -165,7 +166,9 @@ export default function App() {
           <Nav />
           <ScrollToTop />
           <main>
-            <AnimatedRoutes />
+            <Suspense fallback={<div className="p-6">Loading...</div>}>
+              <AnimatedRoutes />
+            </Suspense>
           </main>
         </div>
       </BrowserRouter>

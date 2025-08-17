@@ -1,9 +1,22 @@
-import { databases, storage, Query } from '../lib/backend';
+import { databases, Query } from '../lib/backend';
 
 const DB_ID = import.meta.env.VITE_DATABASE_ID || import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const TRIPS_COLLECTION_ID = import.meta.env.VITE_TRIPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIPS_COLLECTION_ID;
 const BUCKET_ID = import.meta.env.VITE_BUCKET_ID || import.meta.env.VITE_APPWRITE_BUCKET_ID;
 const TRIP_STOPS_COLLECTION_ID = import.meta.env.VITE_TRIP_STOPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIP_STOPS_COLLECTION_ID;
+
+// Build a direct preview URL for Appwrite storage files.
+// This avoids relying on SDK methods that may return objects/promises and lets the UI use a simple string URL.
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || import.meta.env.VITE_APPWRITE_ENDPOINT || '';
+const PROJECT_ID = import.meta.env.VITE_PROJECT_ID || import.meta.env.VITE_APPWRITE_PROJECT_ID || '';
+
+function buildPreviewUrl(bucketId, fileId, width = 1200, height = 800, quality = 100, mode = 'center') {
+  if (!API_ENDPOINT || !PROJECT_ID || !bucketId || !fileId) return '';
+  // Ensure no trailing slash on endpoint
+  const base = API_ENDPOINT.replace(/\/$/, '');
+  const params = new URLSearchParams({ project: PROJECT_ID, width: String(width), height: String(height), quality: String(quality), mode });
+  return `${base}/storage/buckets/${bucketId}/files/${fileId}/preview?${params.toString()}`;
+}
 
 export async function listTrips() {
   const res = await databases.listDocuments(DB_ID, TRIPS_COLLECTION_ID);
@@ -34,14 +47,16 @@ export function formatTrip(doc) {
 
 export function getTripImageUrl(imageId) {
   if (!imageId) return '';
-  return storage.getFilePreview(BUCKET_ID, imageId, 800, 600, 'center').href;
+  return buildPreviewUrl(BUCKET_ID, imageId, 1200, 800, 90, 'center');
 }
 
 export function getStopImageUrl(imageId) {
-  return getTripImageUrl(imageId);
+  if (!imageId) return '';
+  return buildPreviewUrl(BUCKET_ID, imageId, 1200, 800, 90, 'center');
 }
 
 export function getTripImageUrls(imageIds = []) {
+  if (!Array.isArray(imageIds)) return [];
   return imageIds.map((id) => getTripImageUrl(id));
 }
 

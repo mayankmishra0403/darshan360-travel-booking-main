@@ -1,57 +1,77 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { account } from '../lib/backend';
+import PropTypes from 'prop-types';
 import { AuthCtx } from './auth';
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const adminAllowlist = (import.meta.env.VITE_ADMIN_EMAILS || '')
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
     (async () => {
       try {
-        const u = await account.get();
-        if (mounted) setUser(u);
-      } catch (e) {
-        // not logged in
-        console.warn('Auth init:', e?.message || e);
+        const sessionUser = await account.get();
+        setUser(sessionUser);
+        const admins = (import.meta.env.VITE_ADMIN_EMAILS || '').split(',').map(s => s.trim()).filter(Boolean);
+        setIsAdmin(sessionUser?.email && admins.includes(sessionUser.email));
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      if (mounted) setLoading(false);
     })();
-    return () => { mounted = false; };
   }, []);
 
-  const login = async ({ email, password }) => {
-    await account.createEmailPasswordSession(email, password);
+  async function signup({ name, email, password }) {
+    const id = `user_${Date.now()}`;
+    await account.create(id, email, password, name);
+    await account.createEmailSession(email, password);
     const u = await account.get();
     setUser(u);
-  };
+    return u;
+  }
 
-  const signup = async ({ name, email, password }) => {
-    await account.create('unique()', email, password, name);
-    await login({ email, password });
-  };
+  async function login({ email, password }) {
+    await account.createEmailSession(email, password);
+    const u = await account.get();
+    setUser(u);
+    return u;
+  }
 
-  const logout = async () => {
-    await account.deleteSessions();
+  async function loginWithGoogle() {
+    try {
+      const redirect = window.location.origin;
+      await account.createOAuth2Session('google', redirect, redirect);
+    } catch (err) {
+      console.warn('OAuth not configured or popup blocked', err?.message || err);
+    }
+  }
+
+  async function logout() {
+    try {
+      await account.deleteSession('current');
+    } catch {
+      // ignore
+    }
     setUser(null);
+  }
+
+  const value = {
+    user,
+    loading,
+    isAdmin,
+    signup,
+    login,
+    loginWithGoogle,
+    logout,
   };
 
-  const loginWithGoogle = async () => {
-    const success = import.meta.env.VITE_GOOGLE_SUCCESS_REDIRECT || `${window.location.origin}/`;
-    const failure = import.meta.env.VITE_GOOGLE_FAILURE_REDIRECT || `${window.location.origin}/login`;
-    // This will redirect the browser to Google and back to success/failure URLs
-    await account.createOAuth2Session('google', success, failure);
-  };
-
-  const isAdmin = !!(user && user.email && adminAllowlist.includes(String(user.email).toLowerCase()));
-  const value = { user, loading, isAdmin, login, signup, logout, loginWithGoogle };
-  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+  return (
+    <AuthCtx.Provider value={value}>
+      {children}
+    </AuthCtx.Provider>
+  );
 }
 
 AuthProvider.propTypes = {
