@@ -12,7 +12,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
     "appwrite": "^17.0.0",
-    
+  "node-appwrite": "^13.0.0",
+  "razorpay": "^2.9.4",
   "framer-motion": "^11.5.5",
   "react-router-dom": "^6.26.2",
     "react": "^19.0.0",
