@@ -1,5 +1,5 @@
 {
-  "name": "react-starter-kit-for-appwrite",
+  "name": "darshan360-travel-booking",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@appwrite.io/pink-icons": "^1.0.0",
     "@tailwindcss/vite": "^4.0.14",
     "appwrite": "^17.0.0",
+  "node-appwrite": "^13.0.0",
+  "razorpay": "^2.9.4",
+  "framer-motion": "^11.5.5",
+  "react-router-dom": "^6.26.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+  "prop-types": "^15.8.1",
     "tailwindcss": "^4.0.14"
   },
   "devDependencies": {
