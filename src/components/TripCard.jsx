@@ -4,6 +4,8 @@ import { getTripImageUrl } from '../services/trips';
 import { useAuth } from '../context/auth';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { createBookingWithIdFallback } from '../services/bookings';
+import { createPaymentWithId } from '../services/payments';
 
 export default function TripCard({ trip, onPay }) {
   const { user } = useAuth();
@@ -131,7 +133,19 @@ export default function TripCard({ trip, onPay }) {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onPay?.(trip)}
+              onClick={async () => {
+                // Create a client-side pending booking/payment and open UPI link
+                try {
+                  const now = new Date().toISOString();
+                  const id = `upi_${Date.now()}`;
+                  await createBookingWithIdFallback({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
+                  try { await createPaymentWithId({ id, data: { orderId: id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } }); } catch (e) { console.warn('Payment create fallback failed', e?.message || e); }
+                } catch (e) {
+                  console.warn('Book now fallback failed', e?.message || e);
+                }
+                window.open('http://razorpay.me/@mayanksoni8625', '_blank', 'noopener');
+                onPay?.(trip);
+              }}
               className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Book Now
