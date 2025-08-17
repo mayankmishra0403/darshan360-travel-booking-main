@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip } from '../services/trips';
 
 export default function TripDetailsPage() {
@@ -30,8 +30,34 @@ export default function TripDetailsPage() {
     })();
   }, [trip?.id]);
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!trip) return <div className="p-4">Not found</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4 mx-auto"></div>
+          <p className="text-gray-600 text-lg">Loading your adventure...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!trip) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🗺️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Trip not found</h2>
+          <p className="text-gray-600 mb-6">This adventure seems to have wandered off the map</p>
+          <Link 
+            to="/" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+          >
+            Explore Other Trips
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const imgs = getTripImageUrls(trip.imageIds);
 
@@ -41,14 +67,16 @@ export default function TripDetailsPage() {
     {
       kind: 'trip',
       title: trip.title,
-      description: `${stops.length} stop${stops.length === 1 ? '' : 's'} • ${trip.date || 'Flexible date'} • ₹${trip.price}`,
+      description: trip.description || `Experience ${stops.length} amazing destinations on this journey`,
       imageId: heroImageId,
+      isMainSlide: true,
     },
     ...stops.map((s) => ({
       kind: 'stop',
       title: s.name,
       description: s.description,
       imageId: s.imageId,
+      isMainSlide: false,
     })),
   ];
 

@@ -1,22 +1,16 @@
-import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
-import PropTypes from 'prop-types';
-import HomePage from "./pages/HomePage";
-import TripsPage from "./pages/TripsPage";
-import BookingsPage from "./pages/BookingsPage";
-import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import AuthProvider from "./context/AuthContext";
-import { useAuth } from "./context/auth";
-import AdminPage from "./pages/AdminPage";
-import TripDetailsPage from "./pages/TripDetailsPage";
-import { AnimatePresence } from 'framer-motion';
-import ScrollToTop from './components/ScrollToTop';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/auth';
+import { motion } from 'framer-motion';
 
-function Nav() {
-  const { user, isAdmin, logout } = useAuth();
+export default function Navigation() {
+  const { user, logout } = useAuth();
+
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50">
+    <motion.nav 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -49,14 +43,6 @@ function Nav() {
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 My Trips
-              </Link>
-            )}
-            {isAdmin && (
-              <Link 
-                to="/admin" 
-                className="text-orange-600 hover:text-orange-700 font-medium transition-colors"
-              >
-                Admin
               </Link>
             )}
           </div>
@@ -102,81 +88,6 @@ function Nav() {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
-
-function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
-  if (loading) return <div className="p-6">Loading...</div>;
-  return user ? children : <Navigate to="/login" replace />;
-}
-
-ProtectedRoute.propTypes = {
-  children: PropTypes.node,
-};
-
-function AnimatedRoutes() {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/trips" element={<TripsPage />} />
-        <Route path="/trips/:id" element={<TripDetailsPage />} />
-        <Route
-          path="/bookings"
-          element={
-            <ProtectedRoute>
-              <BookingsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-  <Route path="/login" element={<LoginPage />} />
-  <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminOnly>
-                <AdminPage />
-              </AdminOnly>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </AnimatePresence>
-  );
-}
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-          <Nav />
-          <ScrollToTop />
-          <main>
-            <AnimatedRoutes />
-          </main>
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
-  );
-}
-
-function AdminOnly({ children }) {
-  const { isAdmin, loading } = useAuth();
-  if (loading) return <div className="p-6">Loading...</div>;
-  return isAdmin ? children : <Navigate to="/" replace />;
-}
-
-AdminOnly.propTypes = { children: PropTypes.node };
