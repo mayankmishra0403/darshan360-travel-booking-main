@@ -9,13 +9,30 @@ export async function listBookingsByUser(userId) {
     Query.equal('userId', userId),
   ]);
   const docs = res.documents;
-  return docs.map((d) => ({
+  const remote = docs.map((d) => ({
     id: d.$id,
     tripId: d.tripId,
     tripTitle: d.tripTitle,
     status: d.status,
     date: d.date,
   }));
+
+  // Merge local fallback bookings saved in localStorage (if any)
+  try {
+    const raw = localStorage.getItem('local_bookings');
+    if (raw) {
+      const local = JSON.parse(raw);
+      const mine = Array.isArray(local) ? local.filter((b) => b.userId === userId) : [];
+      // Avoid duplicates by id
+      const ids = new Set(remote.map((r) => r.id));
+      const merged = [...remote, ...mine.filter((m) => !ids.has(m.id))];
+      return merged;
+    }
+  } catch (e) {
+    console.warn('Failed to read local bookings fallback:', e?.message || e);
+  }
+
+  return remote;
 }
 
 export async function createBooking({ tripId, tripTitle, userId, status, date }) {
@@ -54,4 +71,24 @@ export async function createBookingWithId({ id, tripId, tripTitle, userId, statu
 export async function updateBooking({ id, ...data }) {
   const res = await databases.updateDocument(DB_ID, BOOKINGS_COLLECTION_ID, id, data);
   return res;
+}
+
+// Fallback: save booking locally in localStorage when Appwrite create fails
+export async function createBookingWithIdFallback({ id, tripId, tripTitle, userId, status, date }) {
+  try {
+    return await createBookingWithId({ id, tripId, tripTitle, userId, status, date });
+  } catch (e) {
+    // Save locally so "My Trips" shows the booking immediately
+    try {
+      const raw = localStorage.getItem('local_bookings');
+      const arr = raw ? JSON.parse(raw) : [];
+      const entry = { id, tripId, tripTitle, userId, status, date };
+      arr.push(entry);
+      localStorage.setItem('local_bookings', JSON.stringify(arr));
+      return entry;
+    } catch (err) {
+      console.warn('Failed to save local booking fallback:', err?.message || err);
+      throw e; // rethrow original error
+    }
+  }
 }

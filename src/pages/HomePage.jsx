@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import TripCard from '../components/TripCard';
 import { listTrips } from '../services/trips';
 import { useAuth } from '../context/auth';
-import { createBookingWithId } from '../services/bookings';
+import { createBookingWithIdFallback } from '../services/bookings';
 import { createPaymentWithId } from '../services/payments';
 import { motion } from 'framer-motion';
 
@@ -38,7 +38,7 @@ export default function HomePage() {
     const now = new Date().toISOString();
     const id = `upi_${Date.now()}`;
     try {
-      await createBookingWithId({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
+      await createBookingWithIdFallback({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
     } catch (e) {
       console.warn('Client pending booking create failed (permissions?):', e?.message || e);
     }
