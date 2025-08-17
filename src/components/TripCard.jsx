@@ -16,13 +16,14 @@ export default function TripCard({ trip, onPay }) {
   const price = trip.price ? `₹${Number(trip.price).toLocaleString()}` : 'Price on request';
 
   return (
-    <motion.div 
-      whileHover={{ y: -8, scale: 1.02 }}
+    <motion.div
+      whileHover={{ y: -10, scale: 1.04 }}
       whileTap={{ scale: 0.98 }}
-      className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
+      className="group relative bg-white rounded-3xl shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent"
+      style={{ boxShadow: '0 0 0 0 rgba(0,0,0,0.1)' }}
     >
-      {/* Enhanced Image Container */}
-      <div className="relative h-64 overflow-hidden">
+  {/* Enhanced Image Container */}
+  <div className="relative h-64 overflow-hidden z-20">
         {img && !imageError ? (
           <>
             {!imageLoaded && (
@@ -31,15 +32,16 @@ export default function TripCard({ trip, onPay }) {
               </div>
             )}
             <Link to={`/trips/${trip.id}`} className="block w-full h-full">
-              <img 
-                loading="lazy" 
-                src={img} 
-                alt={trip.title} 
+              <img
+                loading="lazy"
+                src={img}
+                alt={trip.title}
                 className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
+                style={{ filter: 'brightness(0.98) saturate(1.15)' }}
               />
             </Link>
           </>
@@ -66,21 +68,21 @@ export default function TripCard({ trip, onPay }) {
           </div>
         </div>
 
-        {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+  {/* Overlay Gradient */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      {/* Enhanced Content */}
-      <div className="p-6">
+  {/* Enhanced Content */}
+  <div className="p-6 z-20 relative">
         {/* Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-2xl font-extrabold text-gray-900 mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-orange-500 transition-all duration-300">
           <Link to={`/trips/${trip.id}`} className="hover:underline">
             {trip.title}
           </Link>
         </h3>
         
         {/* Date and Location */}
-        <div className="flex items-center text-gray-600 text-sm mb-4">
+  <div className="flex items-center text-gray-600 text-sm mb-4">
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -93,9 +95,9 @@ export default function TripCard({ trip, onPay }) {
             <div className="text-xs text-gray-500 mb-2 font-medium">Experience Highlights:</div>
             <div className="flex flex-wrap gap-1">
               {trip.stops.slice(0, 3).map((stop, index) => (
-                <span 
+                <span
                   key={index}
-                  className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full border border-blue-200"
+                  className="inline-block bg-gradient-to-r from-blue-100 via-purple-100 to-orange-100 text-blue-700 text-xs px-2 py-1 rounded-full border border-blue-200 shadow-sm"
                 >
                   {stop}
                 </span>
@@ -110,7 +112,7 @@ export default function TripCard({ trip, onPay }) {
         )}
 
         {/* Ratings */}
-        <div className="flex items-center justify-between mb-4">
+  <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <div className="flex text-yellow-400">
               {[...Array(5)].map((_, i) => (
@@ -128,39 +130,45 @@ export default function TripCard({ trip, onPay }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+  <div className="flex gap-3">
           {user ? (
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.12, boxShadow: '0 0 24px 6px #a78bfa, 0 0 48px 12px #fbbf24, 0 0 16px 4px #60a5fa' }}
+              whileTap={{ scale: 0.96 }}
               onClick={async () => {
                 // Create a client-side pending booking/payment and open UPI link
                 try {
                   const now = new Date().toISOString();
                   const id = `upi_${Date.now()}`;
                   await createBookingWithIdFallback({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
-                  try { await createPaymentWithId({ id, data: { orderId: id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } }); } catch (e) { console.warn('Payment create fallback failed', e?.message || e); }
+                  try {
+                    await createPaymentWithId({ id, data: { orderId: id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } });
+                  } catch (e) {
+                    console.warn('Payment create fallback failed', e?.message || e);
+                  }
                 } catch (e) {
                   console.warn('Book now fallback failed', e?.message || e);
                 }
                 window.open('http://razorpay.me/@mayanksoni8625', '_blank', 'noopener');
                 onPay?.(trip);
               }}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-2xl border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300"
+              style={{ boxShadow: '0 0 16px 2px #a78bfa, 0 0 32px 8px #fbbf24, 0 0 8px 2px #60a5fa' }}
             >
               Book Now
             </motion.button>
           ) : (
-            <Link 
-              to="/login" 
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-semibold text-center transition-all duration-200 shadow-lg hover:shadow-xl"
+            <Link
+              to="/login"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white py-3 px-4 rounded-xl font-semibold text-center transition-all duration-200 shadow-lg hover:shadow-2xl border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300"
+              style={{ boxShadow: '0 0 16px 2px #a78bfa, 0 0 32px 8px #fbbf24, 0 0 8px 2px #60a5fa' }}
             >
               Login to Book
             </Link>
           )}
           <Link 
             to={`/trips/${trip.id}`}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center"
+            className="bg-gray-100 hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-orange-100 text-gray-700 py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center border border-gray-200 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-200"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -168,9 +176,30 @@ export default function TripCard({ trip, onPay }) {
           </Link>
         </div>
       </div>
-    </motion.div>
+  </motion.div>
   );
 }
+
+// Animated multi-color glow effect
+// Add this to your global CSS (e.g., App.css or index.css):
+/*
+.animate-glow {
+  background: conic-gradient(
+    from 0deg,
+    #60a5fa 0deg 90deg,
+    #a78bfa 90deg 180deg,
+    #fbbf24 180deg 270deg,
+    #f472b6 270deg 360deg
+  );
+  filter: blur(12px) brightness(1.2);
+  opacity: 0.7;
+  animation: glow-rotate 3s linear infinite;
+}
+@keyframes glow-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+*/
 
 TripCard.propTypes = {
   trip: PropTypes.shape({

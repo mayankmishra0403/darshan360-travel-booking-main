@@ -16,9 +16,114 @@ export default function HomePage() {
     (async () => {
       try {
         const t = await listTrips();
-        setTrips(t || []);
+        if (t && t.length > 0) {
+          setTrips(t);
+        } else {
+          // Demo trips if none from backend
+          setTrips([
+            {
+              id: 'demo-chitrakoot',
+              title: 'Chitrakoot Spiritual Retreat',
+              price: 4999,
+              date: '2025-09-10',
+              imageIds: ['https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Ramghat', 'Kamadgiri', 'Gupt Godavari'],
+            },
+            {
+              id: 'demo-ramsetu',
+              title: 'Ram Setu Adventure',
+              price: 7999,
+              date: '2025-10-05',
+              imageIds: ['https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Dhanushkodi', 'Rameswaram Temple', 'Pamban Bridge'],
+            },
+            {
+              id: 'demo-varanasi',
+              title: 'Varanasi Ganga Aarti',
+              price: 5999,
+              date: '2025-11-15',
+              imageIds: ['https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Dashashwamedh Ghat', 'Kashi Vishwanath', 'Sarnath'],
+            },
+            {
+              id: 'demo-hampi',
+              title: 'Hampi Heritage Walk',
+              price: 6999,
+              date: '2025-12-01',
+              imageIds: ['https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Virupaksha Temple', 'Vittala Temple', 'Lotus Mahal'],
+            },
+            {
+              id: 'demo-leh',
+              title: 'Leh-Ladakh Road Trip',
+              price: 15999,
+              date: '2026-01-20',
+              imageIds: ['https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Pangong Lake', 'Khardung La', 'Nubra Valley'],
+            },
+            {
+              id: 'demo-goa',
+              title: 'Goa Beach Escape',
+              price: 8999,
+              date: '2025-12-20',
+              imageIds: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'],
+              stops: ['Baga Beach', 'Fort Aguada', 'Dudhsagar Falls'],
+            },
+          ]);
+        }
       } catch (e) {
         console.error(e);
+        // fallback demo trips
+        setTrips([
+          {
+            id: 'demo-chitrakoot',
+            title: 'Chitrakoot Spiritual Retreat',
+            price: 4999,
+            date: '2025-09-10',
+            imageIds: [],
+            stops: ['Ramghat', 'Kamadgiri', 'Gupt Godavari'],
+          },
+          {
+            id: 'demo-ramsetu',
+            title: 'Ram Setu Adventure',
+            price: 7999,
+            date: '2025-10-05',
+            imageIds: [],
+            stops: ['Dhanushkodi', 'Rameswaram Temple', 'Pamban Bridge'],
+          },
+          {
+            id: 'demo-varanasi',
+            title: 'Varanasi Ganga Aarti',
+            price: 5999,
+            date: '2025-11-15',
+            imageIds: [],
+            stops: ['Dashashwamedh Ghat', 'Kashi Vishwanath', 'Sarnath'],
+          },
+          {
+            id: 'demo-hampi',
+            title: 'Hampi Heritage Walk',
+            price: 6999,
+            date: '2025-12-01',
+            imageIds: [],
+            stops: ['Virupaksha Temple', 'Vittala Temple', 'Lotus Mahal'],
+          },
+          {
+            id: 'demo-leh',
+            title: 'Leh-Ladakh Road Trip',
+            price: 15999,
+            date: '2026-01-20',
+            imageIds: [],
+            stops: ['Pangong Lake', 'Khardung La', 'Nubra Valley'],
+          },
+          {
+            id: 'demo-goa',
+            title: 'Goa Beach Escape',
+            price: 8999,
+            date: '2025-12-20',
+            imageIds: [],
+            stops: ['Baga Beach', 'Fort Aguada', 'Dudhsagar Falls'],
+          },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -59,7 +164,23 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 relative overflow-hidden">
+      {/* Floating background bubbles */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className={`absolute rounded-full bg-gradient-to-br from-blue-300 via-purple-200 to-orange-200 opacity-40 animate-bubble${i % 3}`}
+            style={{
+              width: `${16 + Math.random() * 28}px`,
+              height: `${16 + Math.random() * 28}px`,
+              left: `${Math.random() * 95}%`,
+              bottom: `${Math.random() * 85}%`,
+              animationDelay: `${Math.random() * 5}s`,
+            }}
+          />
+        ))}
+      </div>
       {/* Enhanced Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-orange-500 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -149,18 +270,19 @@ export default function HomePage() {
             <p className="text-gray-600">Try adjusting your search or browse all destinations</p>
           </motion.div>
         ) : (
-          <motion.div 
-            layout 
+          <motion.div
+            layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
           >
             {filtered.map((t, index) => (
-              <motion.div 
-                key={t.id} 
-                layout 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
+              <motion.div
+                key={t.id}
+                layout
+                initial={{ opacity: 0, y: 40, scale: 0.95, rotate: -2 }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                whileHover={{ scale: 1.04, rotate: 2, boxShadow: '0 8px 32px 0 #a78bfa33' }}
+                exit={{ opacity: 0, y: 40, scale: 0.9, rotate: -4 }}
+                transition={{ delay: index * 0.08, duration: 0.45, type: 'spring', stiffness: 120 }}
               >
                 <TripCard trip={t} onPay={pay} />
               </motion.div>
