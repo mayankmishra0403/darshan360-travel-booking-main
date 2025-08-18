@@ -3,6 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip } from '../services/trips';
 
+import PlaceAmenities from '../components/PlaceAmenities';
+import { getHotelsForPlace } from '../services/hotels';
+import { getRestaurantsForPlace } from '../services/restaurants';
+import { getFoodsForPlace } from '../services/foods';
+
 export default function TripDetailsPage() {
   const { id } = useParams();
   const [trip, setTrip] = useState(null);
@@ -33,6 +38,7 @@ export default function TripDetailsPage() {
     })();
   }, [trip?.id]);
 
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
@@ -61,6 +67,12 @@ export default function TripDetailsPage() {
       </div>
     );
   }
+
+
+  // Get amenities for the main place (trip.title)
+  const hotels = getHotelsForPlace(trip.title);
+  const restaurants = getRestaurantsForPlace(trip.title);
+  const foods = getFoodsForPlace(trip.title);
 
   const imgs = getTripImageUrls(trip.imageIds);
 
@@ -206,6 +218,8 @@ export default function TripDetailsPage() {
         <div className="bg-white rounded-lg p-4 shadow border"><span className="font-semibold">Date:</span> {trip.date || 'Flexible'}</div>
         <div className="bg-white rounded-lg p-4 shadow border"><span className="font-semibold">Price:</span> ₹{trip.price}</div>
       </div>
+  {/* Amenities Section for this place */}
+  <PlaceAmenities hotels={hotels} restaurants={restaurants} foods={foods} />
     </div>
   );
 }

@@ -38,12 +38,20 @@ export default function Navigation() {
               Destinations
             </Link>
             {user && (
-              <Link 
-                to="/bookings" 
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                My Trips
-              </Link>
+              <>
+                <Link 
+                  to="/bookings" 
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  My Trips
+                </Link>
+                <Link
+                  to="/contact"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Contact Us
+                </Link>
+              </>
             )}
           </div>
 

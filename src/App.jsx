@@ -11,8 +11,11 @@ import AuthProvider from "./context/AuthContext";
 import { useAuth } from "./context/auth";
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const TripDetailsPage = lazy(() => import('./pages/TripDetailsPage'));
+const HotelsPage = lazy(() => import('./pages/HotelsPage'));
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
 import { AnimatePresence } from 'framer-motion';
 import ScrollToTop from './components/ScrollToTop';
+
 
 function Nav() {
   const { user, isAdmin, logout } = useAuth();
@@ -70,12 +73,26 @@ function Nav() {
               Destinations
             </Link>
             {user && (
-              <Link
-                to="/bookings"
-                className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
-              >
-                My Trips
-              </Link>
+              <>
+                <Link
+                  to="/bookings"
+                  className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
+                >
+                  My Trips
+                </Link>
+                <Link
+                  to="/hotels"
+                  className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
+                >
+                  Hotels
+                </Link>
+                <Link
+                  to="/contact"
+                  className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
+                >
+                  Contact Us
+                </Link>
+              </>
             )}
             {isAdmin && (
               <Link
@@ -176,11 +193,14 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+  <Route path="/hotels" element={<HotelsPage />} />
+  <Route path="/contact" element={<ContactUsPage />} />
       </Routes>
     </AnimatePresence>
   );
 }
 
+// ...existing code...
 export default function App() {
   return (
     <AuthProvider>

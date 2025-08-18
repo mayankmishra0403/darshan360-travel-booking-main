@@ -19,8 +19,8 @@ export default function TripCard({ trip, onPay }) {
     <motion.div
       whileHover={{ y: -10, scale: 1.04 }}
       whileTap={{ scale: 0.98 }}
-      className="group relative bg-white rounded-3xl shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent"
-      style={{ boxShadow: '0 0 0 0 rgba(0,0,0,0.1)' }}
+  className="group relative bg-white rounded-3xl shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent tripcard-illuminated"
+  style={{ boxShadow: '0 0 0 0 rgba(0,0,0,0.1)' }}
     >
   {/* Enhanced Image Container */}
   <div className="relative h-64 overflow-hidden z-20">
@@ -89,6 +89,7 @@ export default function TripCard({ trip, onPay }) {
           {trip.date || 'Flexible dates'}
         </div>
 
+
         {/* Stops/Highlights */}
         {Array.isArray(trip.stops) && trip.stops.length > 0 && (
           <div className="mb-4">
@@ -111,6 +112,7 @@ export default function TripCard({ trip, onPay }) {
           </div>
         )}
 
+
         {/* Ratings */}
   <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -130,13 +132,13 @@ export default function TripCard({ trip, onPay }) {
         </div>
 
         {/* Action Buttons */}
-  <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           {user ? (
             <motion.button
               whileHover={{ scale: 1.12, boxShadow: '0 0 24px 6px #a78bfa, 0 0 48px 12px #fbbf24, 0 0 16px 4px #60a5fa' }}
               whileTap={{ scale: 0.96 }}
               onClick={async () => {
-                // Create a client-side pending booking/payment and open UPI link
+                // ...existing code...
                 try {
                   const now = new Date().toISOString();
                   const id = `upi_${Date.now()}`;
