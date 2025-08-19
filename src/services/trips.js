@@ -9,6 +9,7 @@ const TRIP_STOPS_COLLECTION_ID = import.meta.env.VITE_TRIP_STOPS_COLLECTION_ID |
 // This avoids relying on SDK methods that may return objects/promises and lets the UI use a simple string URL.
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || import.meta.env.VITE_APPWRITE_ENDPOINT || '';
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID || import.meta.env.VITE_APPWRITE_PROJECT_ID || '';
+const MEDIA_PROXY = import.meta.env.VITE_MEDIA_PROXY || '';
 
 // NOTE: This project stores the admin-uploaded trip video file id on the trips document
 // under the attribute key `video_file_id` (string). Make sure your Appwrite collection
@@ -26,6 +27,11 @@ function buildPreviewUrl(bucketId, fileId, width = 1200, height = 800, quality =
 // Build a direct view/download URL which serves the original file (no resizing/compression)
 function buildViewUrl(bucketId, fileId) {
   if (!API_ENDPOINT || !PROJECT_ID || !bucketId || !fileId) return '';
+  // If a media proxy is configured, use it (helps with private buckets / CORS)
+  if (MEDIA_PROXY) {
+    const baseProxy = MEDIA_PROXY.replace(/\/$/, '');
+    return `${baseProxy}/media/${encodeURIComponent(bucketId)}/${encodeURIComponent(fileId)}`;
+  }
   const base = API_ENDPOINT.replace(/\/$/, '');
   const params = new URLSearchParams({ project: PROJECT_ID });
   return `${base}/storage/buckets/${bucketId}/files/${fileId}/view?${params.toString()}`;

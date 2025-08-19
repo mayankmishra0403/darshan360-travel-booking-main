@@ -63,6 +63,35 @@ if (AW_ENDPOINT && AW_PROJECT && AW_API_KEY) {
   console.warn('Info: Appwrite admin env not fully set; bookings will not be recorded server-side.');
 }
 
+// Proxy media files from Appwrite (avoids CORS and private-bucket issues).
+// Usage: GET /media/:bucketId/:fileId
+app.get('/media/:bucketId/:fileId', async (req, res) => {
+  const { bucketId, fileId } = req.params;
+  if (!AW_ENDPOINT || !AW_PROJECT) return res.status(500).json({ error: 'Appwrite endpoint/project not configured on server' });
+  const base = AW_ENDPOINT.replace(/\/$/, '');
+  const viewUrl = `${base}/storage/buckets/${bucketId}/files/${fileId}/view?project=${AW_PROJECT}`;
+  try {
+    const headers = {};
+    if (AW_API_KEY) headers['X-Appwrite-Key'] = AW_API_KEY;
+    const r = await fetch(viewUrl, { method: 'GET', headers });
+    if (!r.ok) {
+      const text = await r.text().catch(() => null);
+      return res.status(r.status).send(text || `Appwrite returned ${r.status}`);
+    }
+    // Forward content-type and other relevant headers
+    r.headers.forEach((value, name) => {
+      // don't forward hop-by-hop headers
+      if (['transfer-encoding', 'connection'].includes(name.toLowerCase())) return;
+      res.setHeader(name, value);
+    });
+    const arrayBuffer = await r.arrayBuffer();
+    res.status(200).send(Buffer.from(arrayBuffer));
+  } catch (err) {
+    console.error('Media proxy error:', err?.message || err);
+    res.status(500).json({ error: err?.message || 'Failed to proxy media' });
+  }
+});
+
 app.get('/', (req, res) => res.json({ ok: true }));
 
 // Helper: create or update a booking doc keyed by Razorpay orderId
