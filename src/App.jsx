@@ -80,12 +80,7 @@ function Nav() {
                 >
                   My Trips
                 </Link>
-                <Link
-                  to="/hotels"
-                  className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
-                >
-                  Hotels
-                </Link>
+                {/* Hotels tab removed per request */}
                 <Link
                   to="/contact"
                   className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-700 hover:text-blue-600') + ' font-medium transition-colors'}
