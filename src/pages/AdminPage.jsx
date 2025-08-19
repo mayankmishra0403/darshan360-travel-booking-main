@@ -123,8 +123,11 @@ export default function AdminPage() {
         finalIds.push(...results.map((r) => r.$id));
       }
 
-      // If admin provided a video file for the trip, upload it and include videoId
-      let videoIdToSave = form.videoId || null;
+  // If admin provided a video file for the trip, upload it and include videoId
+  // NOTE: We persist the uploaded file id in the trips collection under the
+  // attribute key `video_file_id` (string). Ensure your Appwrite collection
+  // has a String attribute `video_file_id` (recommended max length 255).
+  let videoIdToSave = form.videoId || null;
       if (form.videoFile instanceof File) {
         const resVideo = await storage.createFile(BUCKET_ID, 'unique()', form.videoFile);
         videoIdToSave = resVideo.$id;
@@ -135,8 +138,9 @@ export default function AdminPage() {
         price: Number(form.price || 0),
         date: form.date || null,
         imageIds: finalIds,
-        // Use 'video_file_id' field to match collection's allowed attributes
-        video_file_id: videoIdToSave,
+  // Use 'video_file_id' field to match collection's allowed attributes
+  // (this is the file id returned by Appwrite storage.createFile)
+  video_file_id: videoIdToSave,
       };
 
       let tripDoc;

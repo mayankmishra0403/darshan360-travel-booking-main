@@ -10,6 +10,11 @@ const TRIP_STOPS_COLLECTION_ID = import.meta.env.VITE_TRIP_STOPS_COLLECTION_ID |
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || import.meta.env.VITE_APPWRITE_ENDPOINT || '';
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID || import.meta.env.VITE_APPWRITE_PROJECT_ID || '';
 
+// NOTE: This project stores the admin-uploaded trip video file id on the trips document
+// under the attribute key `video_file_id` (string). Make sure your Appwrite collection
+// has a String attribute named `video_file_id` (recommended max length: 255).
+// The UI maps that backend attribute to `videoId` for convenience.
+
 function buildPreviewUrl(bucketId, fileId, width = 1200, height = 800, quality = 100, mode = 'center') {
   if (!API_ENDPOINT || !PROJECT_ID || !bucketId || !fileId) return '';
   // Ensure no trailing slash on endpoint
@@ -42,6 +47,7 @@ export function formatTrip(doc) {
       ? doc.imageIds
       : (doc.imageId ? [doc.imageId] : []),
   // Optional video file id stored on the trip document
+  // Map the collection's `video_file_id` -> runtime `videoId` (null if not present)
   videoId: doc.video_file_id || doc.videoId || null,
     // Stops can be stored as array of strings (legacy) or array of objects { name, description, imageId }
     stops: Array.isArray(doc.stops)
