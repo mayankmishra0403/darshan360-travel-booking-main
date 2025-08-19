@@ -1,0 +1,2144 @@
+# Darshan 360 — Travel Booking React App
+
+A simple travel booking web app built with React, using a hosted backend for auth/database/storage and Razorpay for payments.
+
+## Features
+
+- Auth: Sign up, login, logout
+- Auth: Sign up, login (email/password) and Login with Google
+- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;- Trips: Fetch trips from a database and images from storage
+- Trips: Each trip supports multiple images and multiple destination stops
+- Payments: Razorpay Checkout integration to pay for a trip
+- Bookings: Store successful payments as bookings; view "My Bookings"
+ - Admin Panel: Email-allowlisted admin users can add trips (with image upload)
+
+## Setup
+
+1) Install dependencies
+
+```
+npm install
+```
+
+2) Configure `.env`
+import React from "react";
+
+// Minimal PageTransition component: no animations to avoid parser/build issues.
+const PageTransition = ({ children }) => {
+   return <>{children}</>;
+};
+
+export default PageTransition;
+node_modules

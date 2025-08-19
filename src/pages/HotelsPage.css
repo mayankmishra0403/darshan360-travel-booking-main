@@ -1,0 +1,28 @@
+.hotels-page-container {
+  padding: 2.5rem 1rem 3rem 1rem;
+  background: linear-gradient(120deg, #f0f4ff 0%, #f9f9f9 100%);
+  min-height: 100vh;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(80, 80, 200, 0.08);
+}
+
+.hotels-page-title {
+  font-size: 2.7rem;
+  font-weight: bold;
+  margin-bottom: 2.5rem;
+  color: #3b3b7a;
+  text-align: center;
+}
+
+.hotels-place-block {
+  margin-bottom: 3.5rem;
+}
+
+.hotels-place-title {
+  font-size: 1.5rem;
+  color: #6366f1;
+  margin-bottom: 1.2rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}

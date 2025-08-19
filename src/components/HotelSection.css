@@ -1,0 +1,159 @@
+.hotel-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(120deg, #f0f4ff 0%, #f9f9f9 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(80, 80, 200, 0.08);
+}
+
+.hotel-section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #3b3b7a;
+  text-align: center;
+}
+
+.hotel-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.hotel-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(80, 80, 200, 0.07);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e0e7ff;
+}
+
+.hotel-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(80, 80, 200, 0.13);
+}
+
+.hotel-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.hotel-card-header h3 {
+  font-size: 1.3rem;
+  color: #2d2d5a;
+  margin: 0;
+}
+
+.hotel-location {
+  font-size: 0.95rem;
+  color: #6b7280;
+  background: #e0e7ff;
+  padding: 0.2rem 0.7rem;
+  border-radius: 1rem;
+}
+
+.hotel-description {
+  margin: 0.7rem 0 1rem 0;
+  color: #444;
+  font-size: 1.05rem;
+}
+
+.hotel-manager-btn {
+  margin-top: 1rem;
+  background: linear-gradient(90deg, #6366f1 0%, #a78bfa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(80, 80, 200, 0.10);
+  transition: background 0.2s, transform 0.2s;
+}
+.hotel-manager-btn:hover {
+  background: linear-gradient(90deg, #a78bfa 0%, #6366f1 100%);
+  transform: scale(1.05);
+}
+
+.hotel-manager-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(60, 60, 100, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.hotel-manager-modal-content {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px rgba(80, 80, 200, 0.18);
+  padding: 2.2rem 2.5rem 1.5rem 2.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s;
+}
+.hotel-manager-modal-content h4 {
+  font-size: 1.3rem;
+  color: #3b3b7a;
+  margin-bottom: 1rem;
+}
+.hotel-manager-modal-content p {
+  font-size: 1.05rem;
+  color: #444;
+  margin: 0.5rem 0;
+}
+.hotel-manager-modal-content a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+.hotel-manager-modal-content a:hover {
+  text-decoration: underline;
+}
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #3b3b7a;
+}
+
+.hotel-features {
+  list-style: disc inside;
+  margin-bottom: 1rem;
+  color: #3b3b7a;
+  padding-left: 1rem;
+}
+
+.hotel-manager {
+  background: #f0f4ff;
+  padding: 0.7rem 1rem;
+  border-radius: 0.7rem;
+  font-size: 0.98rem;
+  color: #2d2d5a;
+}
+
+.hotel-manager a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.hotel-manager a:hover {
+  text-decoration: underline;
+}
