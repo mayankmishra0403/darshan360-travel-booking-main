@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip, getTripVideoUrl } from '../services/trips';
 
 import PlaceAmenities from '../components/PlaceAmenities';
+import StopsGrid from '../components/StopsGrid';
 import { getHotelsForPlace } from '../services/hotels';
 import { getRestaurantsForPlace } from '../services/restaurants';
 import { getFoodsForPlace } from '../services/foods';
@@ -291,6 +292,7 @@ export default function TripDetailsPage() {
         <div className="bg-white rounded-lg p-4 shadow border"><span className="font-semibold">Price:</span> ₹{trip.price}</div>
       </div>
   {/* Amenities Section for this place */}
+  <StopsGrid stops={stops} />
   <PlaceAmenities hotels={hotels} restaurants={restaurants} foods={foods} />
     </div>
   );
