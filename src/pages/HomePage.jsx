@@ -59,9 +59,18 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-              Discover Your Next
-              <span className="block text-yellow-300">Adventure</span>
+            <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-white">
+              <span className="relative inline-block">
+                Explore the timeless{' '}
+                <span style={{ fontFamily: "'Kalam', cursive", fontSize: '1.2em', color: '#fbbf24', textShadow: '2px 2px 12px rgba(0,0,0,1)' }}>
+                  तपोभूमि
+                </span>{' '}of
+                <br />
+                <span style={{ fontFamily: "'Kalam', cursive", fontSize: '1.2em', color: '#ffe066', textShadow: '2px 2px 12px rgba(0,0,0,1)' }}>
+                  श्री राम
+                </span>
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-[-18px] w-[120%] h-6 pointer-events-none z-[-1] animate-fire-glow" />
+              </span>
             </h1>
             <p className="text-lg sm:text-xl opacity-90 mb-8 max-w-3xl mx-auto">
               Handpicked destinations, expert local guides, and seamless booking experiences. 

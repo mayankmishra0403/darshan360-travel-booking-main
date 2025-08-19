@@ -1,3 +1,24 @@
+@keyframes fire-glow {
+  0% {
+    filter: blur(8px) brightness(1.2);
+    background-position: 0% 50%;
+  }
+  50% {
+    filter: blur(12px) brightness(1.5);
+    background-position: 100% 50%;
+  }
+  100% {
+    filter: blur(8px) brightness(1.2);
+    background-position: 0% 50%;
+  }
+}
+
+.animate-fire-glow {
+  background: linear-gradient(90deg, #ff9800 0%, #ffd700 40%, #ff5722 70%, #fffde4 100%);
+  opacity: 0.7;
+  border-radius: 50%;
+  animation: fire-glow 2.2s infinite linear;
+}
 /* Floating background bubbles animation */
 .animate-bubble0 {
   animation: bubble-float-0 12s linear infinite;
