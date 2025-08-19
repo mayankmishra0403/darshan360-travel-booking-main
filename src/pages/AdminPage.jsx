@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { databases, storage } from '../lib/backend';
-import { getTripImageUrl } from '../services/trips';
+import { getTripImageUrl, getTripVideoUrl } from '../services/trips';
 
 const DB_ID = import.meta.env.VITE_DATABASE_ID || import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const TRIPS_COLLECTION_ID = import.meta.env.VITE_TRIPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIPS_COLLECTION_ID;
@@ -34,6 +34,7 @@ export default function AdminPage() {
   const [removedImageIndices, setRemovedImageIndices] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [videoTestUrl, setVideoTestUrl] = useState('');
 
   useEffect(() => {
     if (tab === 'trips') loadTrips();
@@ -179,8 +180,15 @@ export default function AdminPage() {
       }
 
   // Log and show the saved trip and the uploaded video file id (if any) so admins can verify
-  console.info('Saved trip', tripDoc, 'video_file_id', videoIdToSave);
-  setMessage(`Saved trip successfully${videoIdToSave ? ` (video_file_id: ${videoIdToSave})` : ''}`);
+      console.info('Saved trip', tripDoc, 'video_file_id', videoIdToSave);
+      setMessage(`Saved trip successfully${videoIdToSave ? ` (video_file_id: ${videoIdToSave})` : ''}`);
+      // If a video was saved, compute a test URL (uses proxy if configured in frontend env)
+      if (videoIdToSave) {
+        const url = getTripVideoUrl(videoIdToSave);
+        setVideoTestUrl(url);
+      } else {
+        setVideoTestUrl('');
+      }
       setForm(emptyForm);
       setStops([]);
       setTripFiles([]);
@@ -384,6 +392,12 @@ export default function AdminPage() {
                 <button type="submit" disabled={saving} className="bg-blue-600 text-white px-3 py-1 rounded">{saving ? 'Saving...' : 'Save'}</button>
                 <button type="button" onClick={() => { setForm(emptyForm); setStops([]); setTripFiles([]); }} className="px-3 py-1 rounded bg-gray-100">Cancel</button>
               </div>
+              {videoTestUrl && (
+                <div className="mt-2">
+                  <button type="button" onClick={() => window.open(videoTestUrl, '_blank')} className="px-3 py-1 rounded bg-green-600 text-white">Open video URL</button>
+                  <div className="text-xs text-gray-600 mt-1">Opens proxied URL if `VITE_MEDIA_PROXY` is configured, otherwise Appwrite view URL.</div>
+                </div>
+              )}
             </form>
           </div>
         </div>
