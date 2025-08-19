@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   const [bg, setBg] = useState(null);
+  const [firstTrip, setFirstTrip] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -20,7 +21,10 @@ export default function HomePage() {
         const first = Array.isArray(trips) && trips.length ? trips[0] : null;
         const imgId = first?.imageIds?.[0];
         const url = imgId ? getTripImageUrl(imgId) : null;
-        if (mounted) setBg(url || heroImgFallback);
+        if (mounted) {
+          setBg(url || heroImgFallback);
+          setFirstTrip(first);
+        }
       } catch (e) {
         if (mounted) setBg(heroImgFallback);
       }
@@ -163,7 +167,7 @@ export default function HomePage() {
                 )}
 
                 <Link
-                  to="/trips/chitrakoot"
+                  to={firstTrip ? `/trips/${firstTrip.id}` : '/trips'}
                   className="relative group bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-200 text-white w-12 h-12 rounded-full font-medium shadow-lg flex items-center justify-center overflow-hidden"
                   style={{ boxShadow: '0 8px 20px rgba(251, 191, 36, 0.2)' }}
                 >
