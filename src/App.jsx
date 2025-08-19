@@ -33,7 +33,7 @@ function Nav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2" aria-label="Home">
             <div
               className={
                 'w-8 h-8 rounded-lg flex items-center justify-center ' +
@@ -42,14 +42,7 @@ function Nav() {
             >
               <span className={isHome ? 'text-white font-bold text-sm' : 'text-white font-bold text-sm'}>D</span>
             </div>
-            <span
-              className={
-                'text-xl font-bold ' +
-                (isHome ? 'text-white' : 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent')
-              }
-            >
-              Darshan 360
-            </span>
+            {/* Brand text removed per request; logo retained */}
           </Link>
 
           {/* Navigation Links */}
