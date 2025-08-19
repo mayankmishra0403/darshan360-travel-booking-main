@@ -14,6 +14,8 @@ export default function TripDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0); // for slide animation
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const videoRef = useRef(null);
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -192,15 +194,55 @@ export default function TripDetailsPage() {
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center" />
             )}
-            {current?.kind === 'video' && current.videoUrl && (
-              <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 2 }}>
-                <video controls src={current.videoUrl} className="w-full h-full object-cover" />
-              </div>
-            )}
-            {current?.kind === 'video' && !current.videoUrl && (
-              <div className="absolute inset-0 flex items-center justify-center text-white z-30">
-                <div className="bg-black/60 p-4 rounded">Video not available</div>
-              </div>
+            {current?.kind === 'video' && (
+              <>
+                {/* Show a poster (first image) with a play button overlay. Clicking opens modal player. */}
+                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/40" style={{ zIndex: 1 }}>
+                  {imgs[0] ? (
+                    <img src={imgs[0]} alt={trip.title} className="w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-black/60 to-black/30" />
+                  )}
+                  <button
+                    onClick={() => setShowVideoModal(true)}
+                    className="absolute z-30 flex items-center justify-center rounded-full bg-white/90 hover:bg-white p-4 shadow-lg"
+                    aria-label="Play video"
+                    style={{ width: 96, height: 96 }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000" width="36" height="36">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </button>
+                  {!current.videoUrl && (
+                    <div className="absolute z-40 text-white">Video not available</div>
+                  )}
+                </div>
+
+                {/* Modal video player */}
+                {showVideoModal && current.videoUrl && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/80" onClick={() => {
+                      // pause video when closing
+                      videoRef.current?.pause?.();
+                      setShowVideoModal(false);
+                    }} />
+                    <div className="relative z-60 max-w-5xl w-full h-[80vh] bg-black rounded overflow-hidden">
+                      <button onClick={() => {
+                        videoRef.current?.pause?.();
+                        setShowVideoModal(false);
+                      }} className="absolute right-3 top-3 z-70 bg-white/80 rounded-full p-1">✕</button>
+                      <video
+                        ref={videoRef}
+                        controls
+                        autoPlay
+                        playsInline
+                        src={current.videoUrl}
+                        className="w-full h-full object-contain bg-black"
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
           </motion.div>
