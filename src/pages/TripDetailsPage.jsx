@@ -78,6 +78,10 @@ export default function TripDetailsPage() {
 
   // If the trip has an admin-uploaded video, use that as the only slide
   const tripVideoUrl = trip?.videoId ? getTripVideoUrl(trip.videoId) : null;
+  // Debug logging to help identify why video may not be playing
+  if (trip?.videoId) {
+    console.info('Trip has video file id:', trip.videoId, 'built view url:', tripVideoUrl);
+  }
 
   // Build slides: first slide is the Trip hero; remaining slides are stops
   const heroImageId = Array.isArray(trip.imageIds) && trip.imageIds.length > 0 ? trip.imageIds[0] : null;
@@ -191,6 +195,11 @@ export default function TripDetailsPage() {
             {current?.kind === 'video' && current.videoUrl && (
               <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 2 }}>
                 <video controls src={current.videoUrl} className="w-full h-full object-cover" />
+              </div>
+            )}
+            {current?.kind === 'video' && !current.videoUrl && (
+              <div className="absolute inset-0 flex items-center justify-center text-white z-30">
+                <div className="bg-black/60 p-4 rounded">Video not available</div>
               </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />

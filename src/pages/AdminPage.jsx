@@ -178,7 +178,9 @@ export default function AdminPage() {
         }
       }
 
-  setMessage('Saved trip successfully');
+  // Log and show the saved trip and the uploaded video file id (if any) so admins can verify
+  console.info('Saved trip', tripDoc, 'video_file_id', videoIdToSave);
+  setMessage(`Saved trip successfully${videoIdToSave ? ` (video_file_id: ${videoIdToSave})` : ''}`);
       setForm(emptyForm);
       setStops([]);
       setTripFiles([]);
