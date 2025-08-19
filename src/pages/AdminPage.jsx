@@ -123,11 +123,19 @@ export default function AdminPage() {
         finalIds.push(...results.map((r) => r.$id));
       }
 
+      // If admin provided a video file for the trip, upload it and include videoId
+      let videoIdToSave = form.videoId || null;
+      if (form.videoFile instanceof File) {
+        const resVideo = await storage.createFile(BUCKET_ID, 'unique()', form.videoFile);
+        videoIdToSave = resVideo.$id;
+      }
+
       const payload = {
         title: form.title,
         price: Number(form.price || 0),
         date: form.date || null,
         imageIds: finalIds,
+        videoId: videoIdToSave,
       };
 
       let tripDoc;
@@ -355,6 +363,14 @@ export default function AdminPage() {
                 )}
 
                 <input type="file" accept="image/*" multiple onChange={(e) => setTripFiles(Array.from(e.target.files || []))} />
+              </div>
+
+              <div className="mt-3">
+                <label className="block text-sm font-medium mb-1">Trip video (optional) — MP4/WEBM</label>
+                <input type="file" accept="video/*" onChange={(e) => setForm((f) => ({ ...f, videoFile: e.target.files?.[0] || null }))} />
+                {form.videoId && !form.videoFile && (
+                  <div className="mt-2 text-sm text-gray-600">Existing video attached</div>
+                )}
               </div>
 
               <div className="flex gap-2">

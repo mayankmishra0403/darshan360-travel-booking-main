@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
-import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip } from '../services/trips';
+import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip, getTripVideoUrl } from '../services/trips';
 
 import PlaceAmenities from '../components/PlaceAmenities';
 import { getHotelsForPlace } from '../services/hotels';
@@ -76,24 +76,40 @@ export default function TripDetailsPage() {
 
   const imgs = getTripImageUrls(trip.imageIds);
 
+  // If the trip has an admin-uploaded video, use that as the only slide
+  const tripVideoUrl = trip?.videoId ? getTripVideoUrl(trip.videoId) : null;
+
   // Build slides: first slide is the Trip hero; remaining slides are stops
   const heroImageId = Array.isArray(trip.imageIds) && trip.imageIds.length > 0 ? trip.imageIds[0] : null;
-  const slides = [
-    {
-      kind: 'trip',
-      title: trip.title,
-      description: trip.description || `Experience ${stops.length} amazing destinations on this journey`,
-      imageId: heroImageId,
-      isMainSlide: true,
-    },
-    ...stops.map((s) => ({
-      kind: 'stop',
-      title: s.name,
-      description: s.description,
-      imageId: s.imageId,
-      isMainSlide: false,
-    })),
-  ];
+  let slides = [];
+  if (tripVideoUrl) {
+    slides = [
+      {
+        kind: 'video',
+        title: trip.title,
+        description: trip.description || 'Watch the trip video',
+        videoUrl: tripVideoUrl,
+        isMainSlide: true,
+      }
+    ];
+  } else {
+    slides = [
+      {
+        kind: 'trip',
+        title: trip.title,
+        description: trip.description || `Experience ${stops.length} amazing destinations on this journey`,
+        imageId: heroImageId,
+        isMainSlide: true,
+      },
+      ...stops.map((s) => ({
+        kind: 'stop',
+        title: s.name,
+        description: s.description,
+        imageId: s.imageId,
+        isMainSlide: false,
+      }))
+    ];
+  }
 
   const current = slides[index] || null;
 
@@ -172,6 +188,11 @@ export default function TripDetailsPage() {
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center" />
             )}
+            {current?.kind === 'video' && current.videoUrl && (
+              <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 2 }}>
+                <video controls src={current.videoUrl} className="w-full h-full object-cover" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
           </motion.div>
         </AnimatePresence>
@@ -190,26 +211,26 @@ export default function TripDetailsPage() {
               </p>
             )}
           </div>
-          {/* Controls */}
-          <div className="mt-6 flex items-center justify-between">
-            <button
-              onClick={prev}
-              className="bg-white/20 hover:bg-gradient-to-r hover:from-blue-400 hover:via-purple-400 hover:to-orange-300 text-white px-4 py-2 rounded-full border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-all duration-200 shadow-lg hover:shadow-2xl"
-              style={{ boxShadow: '0 0 8px 2px #a78bfa, 0 0 16px 4px #fbbf24, 0 0 4px 1px #60a5fa' }}
-            >
-              ◀ Prev
-            </button>
-            <div className="text-sm opacity-90">
-              {slides.length > 0 ? `${index + 1} / ${slides.length}` : '0 / 0'}
+          {/* Controls (hidden when single video slide present) */}
+          {slides.length > 1 && (
+            <div className="mt-6 flex items-center justify-between">
+              <button
+                onClick={prev}
+                className="bg-white/20 hover:bg-gradient-to-r hover:from-blue-400 hover:via-purple-400 hover:to-orange-300 text-white px-4 py-2 rounded-full border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-all duration-200 shadow-lg hover:shadow-2xl"
+                style={{ boxShadow: '0 0 8px 2px #a78bfa, 0 0 16px 4px #fbbf24, 0 0 4px 1px #60a5fa' }}
+              >
+                ◀ Prev
+              </button>
+              <div className="text-sm opacity-90">{slides.length > 0 ? `${index + 1} / ${slides.length}` : '0 / 0'}</div>
+              <button
+                onClick={next}
+                className="bg-white/20 hover:bg-gradient-to-r hover:from-blue-400 hover:via-purple-400 hover:to-orange-300 text-white px-4 py-2 rounded-full border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-all duration-200 shadow-lg hover:shadow-2xl"
+                style={{ boxShadow: '0 0 8px 2px #a78bfa, 0 0 16px 4px #fbbf24, 0 0 4px 1px #60a5fa' }}
+              >
+                Next ▶
+              </button>
             </div>
-            <button
-              onClick={next}
-              className="bg-white/20 hover:bg-gradient-to-r hover:from-blue-400 hover:via-purple-400 hover:to-orange-300 text-white px-4 py-2 rounded-full border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-all duration-200 shadow-lg hover:shadow-2xl"
-              style={{ boxShadow: '0 0 8px 2px #a78bfa, 0 0 16px 4px #fbbf24, 0 0 4px 1px #60a5fa' }}
-            >
-              Next ▶
-            </button>
-          </div>
+          )}
         </div>
       </section>
       {/* Basic trip meta under the slider */}

@@ -41,6 +41,8 @@ export function formatTrip(doc) {
     imageIds: Array.isArray(doc.imageIds)
       ? doc.imageIds
       : (doc.imageId ? [doc.imageId] : []),
+  // Optional video file id stored on the trip document
+  videoId: doc.videoId || doc.video_file_id || null,
     // Stops can be stored as array of strings (legacy) or array of objects { name, description, imageId }
     stops: Array.isArray(doc.stops)
       ? doc.stops.map((s) => {
@@ -67,6 +69,11 @@ export function getStopImageUrl(imageId, { full = true } = {}) {
 export function getTripImageUrls(imageIds = []) {
   if (!Array.isArray(imageIds)) return [];
   return imageIds.map((id) => getTripImageUrl(id));
+}
+
+export function getTripVideoUrl(fileId) {
+  if (!fileId) return '';
+  return buildViewUrl(BUCKET_ID, fileId);
 }
 
 export async function getTrip(id) {
