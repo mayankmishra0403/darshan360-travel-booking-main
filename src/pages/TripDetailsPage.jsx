@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip, getTripVideoUrl } from '../services/trips';
 
@@ -13,11 +13,8 @@ export default function TripDetailsPage() {
   const { id } = useParams();
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(0); // for slide animation
   const [showVideoModal, setShowVideoModal] = useState(false);
   const videoRef = useRef(null);
-  const isFirstRender = useRef(true);
 
   useEffect(() => {
     (async () => {
@@ -86,50 +83,9 @@ export default function TripDetailsPage() {
     console.info('Trip has video file id:', trip.videoId, 'built view url:', tripVideoUrl);
   }
 
-  // Build slides: first slide is the Trip hero; remaining slides are stops
+  // Hero image (first trip image) or video
   const heroImageId = Array.isArray(trip.imageIds) && trip.imageIds.length > 0 ? trip.imageIds[0] : null;
-  let slides = [];
-  if (tripVideoUrl) {
-    slides = [
-      {
-        kind: 'video',
-        title: trip.title,
-        description: trip.description || 'Watch the trip video',
-        videoUrl: tripVideoUrl,
-        isMainSlide: true,
-      }
-    ];
-  } else {
-    slides = [
-      {
-        kind: 'trip',
-        title: trip.title,
-        description: trip.description || `Experience ${stops.length} amazing destinations on this journey`,
-        imageId: heroImageId,
-        isMainSlide: true,
-      },
-      ...stops.map((s) => ({
-        kind: 'stop',
-        title: s.name,
-        description: s.description,
-        imageId: s.imageId,
-        isMainSlide: false,
-      }))
-    ];
-  }
-
-  const current = slides[index] || null;
-
-  const next = () => {
-    setDirection(1);
-    setIndex((i) => (i + 1) % Math.max(1, slides.length));
-    isFirstRender.current = false;
-  };
-  const prev = () => {
-    setDirection(-1);
-    setIndex((i) => (i - 1 + Math.max(1, slides.length)) % Math.max(1, slides.length));
-    isFirstRender.current = false;
-  };
+  const mainImageUrl = heroImageId ? getStopImageUrl(heroImageId) : (imgs[0] || null);
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -151,103 +107,61 @@ export default function TripDetailsPage() {
             />
           ))}
         </div>
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={index}
-            custom={direction}
-            initial={isFirstRender.current ? false : {
-              x: direction > 0 ? 320 : -320,
-              opacity: 0,
-              scale: 0.92,
-              rotate: direction > 0 ? 8 : -8
-            }}
-            animate={{
-              x: 0,
-              opacity: 1,
-              scale: 1,
-              rotate: 0,
-              transition: { type: 'spring', stiffness: 180, damping: 22, duration: 0.55 }
-            }}
-            exit={isFirstRender.current ? false : {
-              x: direction > 0 ? -320 : 320,
-              opacity: 0,
-              scale: 0.92,
-              rotate: direction > 0 ? -8 : 8,
-              transition: { type: 'spring', stiffness: 180, damping: 22, duration: 0.45 }
-            }}
-            className="absolute inset-0 w-full h-full"
-            style={{ zIndex: 1 }}
-          >
-            {current?.imageId ? (
-              <img
-                src={getStopImageUrl(current.imageId)}
-                alt={current?.title || trip.title}
-                className="w-full h-full object-cover"
-                style={{ filter: 'brightness(0.97) saturate(1.15)' }}
-              />
-            ) : imgs[0] ? (
-              <img
-                src={imgs[0]}
-                alt={trip.title}
-                className="w-full h-full object-cover"
-                style={{ filter: 'brightness(0.97) saturate(1.15)' }}
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center" />
-            )}
-            {current?.kind === 'video' && (
-              <>
-                {/* Show a poster (first image) with a play button overlay. Clicking opens modal player. */}
-                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/40" style={{ zIndex: 1 }}>
-                  {imgs[0] ? (
-                    <img src={imgs[0]} alt={trip.title} className="w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                <div className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
+                  {tripVideoUrl ? (
+                    // Poster with play button
+                    <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/40">
+                      {mainImageUrl ? (
+                        <img src={mainImageUrl} alt={trip.title} className="w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-black/60 to-black/30" />
+                      )}
+                      <button
+                        onClick={() => setShowVideoModal(true)}
+                        className="absolute z-30 flex items-center justify-center rounded-full bg-white/90 hover:bg-white p-4 shadow-lg"
+                        aria-label="Play video"
+                        style={{ width: 96, height: 96 }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000" width="36" height="36">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </button>
+                      {!tripVideoUrl && (
+                        <div className="absolute z-40 text-white">Video not available</div>
+                      )}
+                    </div>
+                  ) : mainImageUrl ? (
+                    <img src={mainImageUrl} alt={trip.title} className="w-full h-full object-cover" style={{ filter: 'brightness(0.97) saturate(1.15)' }} />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-black/60 to-black/30" />
+                    <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center" />
                   )}
-                  <button
-                    onClick={() => setShowVideoModal(true)}
-                    className="absolute z-30 flex items-center justify-center rounded-full bg-white/90 hover:bg-white p-4 shadow-lg"
-                    aria-label="Play video"
-                    style={{ width: 96, height: 96 }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000" width="36" height="36">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
-                  {!current.videoUrl && (
-                    <div className="absolute z-40 text-white">Video not available</div>
-                  )}
-                </div>
 
-                {/* Modal video player */}
-                {showVideoModal && current.videoUrl && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/80" onClick={() => {
-                      // pause video when closing
-                      videoRef.current?.pause?.();
-                      setShowVideoModal(false);
-                    }} />
-                    <div className="relative z-60 max-w-5xl w-full h-[80vh] bg-black rounded overflow-hidden">
-                      <button onClick={() => {
+                  {/* Modal video player (unchanged) */}
+                  {showVideoModal && tripVideoUrl && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                      <div className="absolute inset-0 bg-black/80" onClick={() => {
                         videoRef.current?.pause?.();
                         setShowVideoModal(false);
-                      }} className="absolute right-3 top-3 z-70 bg-white/80 rounded-full p-1">✕</button>
-                      <video
-                        ref={videoRef}
-                        controls
-                        autoPlay
-                        playsInline
-                        src={current.videoUrl}
-                        className="w-full h-full object-contain bg-black"
-                      />
+                      }} />
+                      <div className="relative z-60 max-w-5xl w-full h-[80vh] bg-black rounded overflow-hidden">
+                        <button onClick={() => {
+                          videoRef.current?.pause?.();
+                          setShowVideoModal(false);
+                        }} className="absolute right-3 top-3 z-70 bg-white/80 rounded-full p-1">✕</button>
+                        <video
+                          ref={videoRef}
+                          controls
+                          autoPlay
+                          playsInline
+                          src={tripVideoUrl}
+                          className="w-full h-full object-contain bg-black"
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
-              </>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
-          </motion.div>
-        </AnimatePresence>
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
+                </div>
         {/* Content overlay */}
         <div className="relative z-20 h-full flex flex-col justify-end p-6 sm:p-10 text-white">
           <div className="max-w-3xl">
