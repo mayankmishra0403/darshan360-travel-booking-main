@@ -42,7 +42,7 @@ export function formatTrip(doc) {
       ? doc.imageIds
       : (doc.imageId ? [doc.imageId] : []),
   // Optional video file id stored on the trip document
-  videoId: doc.videoId || doc.video_file_id || null,
+  videoId: doc.video_file_id || doc.videoId || null,
     // Stops can be stored as array of strings (legacy) or array of objects { name, description, imageId }
     stops: Array.isArray(doc.stops)
       ? doc.stops.map((s) => {

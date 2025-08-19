@@ -135,7 +135,8 @@ export default function AdminPage() {
         price: Number(form.price || 0),
         date: form.date || null,
         imageIds: finalIds,
-        videoId: videoIdToSave,
+        // Use 'video_file_id' field to match collection's allowed attributes
+        video_file_id: videoIdToSave,
       };
 
       let tripDoc;
