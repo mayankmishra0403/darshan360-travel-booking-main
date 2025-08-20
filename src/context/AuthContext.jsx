@@ -41,8 +41,14 @@ export default function AuthProvider({ children }) {
 
   async function loginWithGoogle() {
     try {
-      const redirect = window.location.origin;
-      await account.createOAuth2Session('google', redirect, redirect);
+  // Prefer an explicit env-configured app URL. Register both the origin and the /login path
+  // in your Appwrite console (e.g. https://darshan360.netlify.app and https://darshan360.netlify.app/login).
+  const base = import.meta.env.VITE_APP_URL || window.location.origin;
+  const origin = base.replace(/\/$/, '');
+  const success = `${origin}/login`;
+  const failure = `${origin}/login`;
+  console.log('Creating OAuth2 session with success/failure:', success, failure);
+  await account.createOAuth2Session('google', success, failure);
     } catch (err) {
       console.warn('OAuth not configured or popup blocked', err?.message || err);
     }
