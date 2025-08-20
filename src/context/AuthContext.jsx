@@ -41,9 +41,13 @@ export default function AuthProvider({ children }) {
 
   async function loginWithGoogle() {
     try {
-  // Prefer an explicit env-configured app URL. Register both the origin and the /login path
-  // in your Appwrite console (e.g. https://darshan360.netlify.app and https://darshan360.netlify.app/login).
-  const base = import.meta.env.VITE_APP_URL || window.location.origin;
+  // For local development prefer VITE_APP_URL_LOCAL (if provided), otherwise
+  // prefer VITE_APP_URL, and finally fall back to window.location.origin.
+  // This ensures that when running on localhost we send a localhost redirect to Appwrite.
+  const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const localUrl = import.meta.env.VITE_APP_URL_LOCAL || '';
+  const prodUrl = import.meta.env.VITE_APP_URL || '';
+  const base = (isLocalHost && localUrl) ? localUrl : (prodUrl || (typeof window !== 'undefined' ? window.location.origin : ''));
   const origin = base.replace(/\/$/, '');
   const success = `${origin}/login`;
   const failure = `${origin}/login`;
