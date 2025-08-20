@@ -88,3 +88,17 @@ export async function listStopsByTrip(tripId) {
     order: d.order,
   }));
 }
+
+export async function getStop(id) {
+  if (!TRIP_STOPS_COLLECTION_ID) return null;
+  const d = await databases.getDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, id);
+  if (!d) return null;
+  return {
+    id: d.$id,
+    tripId: d.tripId,
+    name: d.name,
+    description: d.description,
+    imageId: d.imageId,
+    images: Array.isArray(d.images) ? d.images : (d.imageId ? [d.imageId] : []),
+  };
+}

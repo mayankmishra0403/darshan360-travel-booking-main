@@ -1,0 +1,96 @@
+.stops-grid-section {
+  margin-top: 1.5rem;
+}
+
+.stops-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.stops-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+  .stops-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stop-card {
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(2,6,23,0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.stop-image-wrap {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+}
+
+.stop-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.stop-image.placeholder {
+  background: linear-gradient(90deg, #f0f4ff, #fde68a);
+}
+
+.stop-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+  color: white;
+}
+
+.stop-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.stop-arrow-box {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.stop-arrow-box:hover {
+  transform: translateX(4px);
+  background: rgba(255,255,255,0.18);
+}
+
+.stop-arrow {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.stop-desc {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.2rem;
+  max-height: 3.6rem;
+  overflow: hidden;
+}

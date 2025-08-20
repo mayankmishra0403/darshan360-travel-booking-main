@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip } from '../services/trips';
 
 import PlaceAmenities from '../components/PlaceAmenities';
+import StopsGrid from '../components/StopsGrid';
 import { getHotelsForPlace } from '../services/hotels';
 import { getRestaurantsForPlace } from '../services/restaurants';
 import { getFoodsForPlace } from '../services/foods';
@@ -15,6 +16,7 @@ export default function TripDetailsPage() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0); // for slide animation
   const isFirstRender = useRef(true);
+  const location = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -32,11 +34,28 @@ export default function TripDetailsPage() {
       try {
         if (trip?.id) {
           const s = await listStopsByTrip(trip.id);
+          console.info('Loaded stops for trip', trip.id, s);
           setStops(s);
         }
       } catch (e) { console.error(e); }
     })();
   }, [trip?.id]);
+
+  // If the page is opened with a ?focus=<stopId> parameter, jump to that stop's slide.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const focus = params.get('focus') || params.get('stopId');
+      if (focus && stops && stops.length) {
+        const idx = stops.findIndex((s) => s.id === focus);
+        if (idx >= 0) {
+          // slides array has hero at index 0, stops start at index 1
+          setIndex(idx + 1);
+          isFirstRender.current = false;
+        }
+      }
+    } catch (err) { console.error(err); }
+  }, [location.search, stops]);
 
 
   if (loading) {
@@ -49,6 +68,19 @@ export default function TripDetailsPage() {
       </div>
     );
   }
+
+  // Debug: if stops are empty show a visible hint and admin link
+  const renderStopsGrid = () => {
+    if (!stops || stops.length === 0) {
+      return (
+        <div className="my-6 p-4 bg-yellow-50 border border-yellow-200 rounded text-yellow-800">
+          No places found for this trip. If you are the admin, open the Admin panel to add stops for this trip.
+          <div className="mt-2"><a href="/admin" className="text-sm text-blue-600 underline">Open Admin panel</a></div>
+        </div>
+      );
+    }
+    return <StopsGrid stops={stops} />;
+  };
 
   if (!trip) {
     return (
@@ -107,6 +139,8 @@ export default function TripDetailsPage() {
     setIndex((i) => (i - 1 + Math.max(1, slides.length)) % Math.max(1, slides.length));
     isFirstRender.current = false;
   };
+
+  
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -218,6 +252,9 @@ export default function TripDetailsPage() {
         <div className="bg-white rounded-lg p-4 shadow border"><span className="font-semibold">Date:</span> {trip.date || 'Flexible'}</div>
         <div className="bg-white rounded-lg p-4 shadow border"><span className="font-semibold">Price:</span> ₹{trip.price}</div>
       </div>
+  {/* Stops (places we visited) */}
+  {renderStopsGrid()}
+
   {/* Amenities Section for this place */}
   <PlaceAmenities hotels={hotels} restaurants={restaurants} foods={foods} />
     </div>

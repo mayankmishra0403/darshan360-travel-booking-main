@@ -1,11 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import './PlaceAmenities.css';
 
 const PlaceAmenities = ({ hotels, restaurants, foods }) => (
   <div className="place-amenities-section">
-    <motion.h2 className="amenities-title" initial={{opacity:0, y:-20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}>Hotels & Restaurants</motion.h2>
+    <motion.h2 className="amenities-title" initial={{opacity:0, y:-20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}>Services we provide</motion.h2>
     <div className="amenities-grid">
       <div className="amenity-block">
         <motion.h3 className="amenity-heading" initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} transition={{delay:0.2}}>Hotels</motion.h3>

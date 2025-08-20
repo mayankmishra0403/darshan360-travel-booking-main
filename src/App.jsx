@@ -11,6 +11,7 @@ import AuthProvider from "./context/AuthContext";
 import { useAuth } from "./context/auth";
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const TripDetailsPage = lazy(() => import('./pages/TripDetailsPage'));
+const StopDetailsPage = lazy(() => import('./pages/StopDetailsPage'));
 const HotelsPage = lazy(() => import('./pages/HotelsPage'));
 const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
 import { AnimatePresence } from 'framer-motion';
@@ -153,6 +154,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/trips" element={<TripsPage />} />
         <Route path="/trips/:id" element={<TripDetailsPage />} />
+  <Route path="/stops/:id" element={<StopDetailsPage />} />
         <Route
           path="/bookings"
           element={

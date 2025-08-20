@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { databases, storage } from '../lib/backend';
-import { getTripImageUrl } from '../services/trips';
+import { getTripImageUrl, getStopImageUrl } from '../services/trips';
 
 const DB_ID = import.meta.env.VITE_DATABASE_ID || import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const TRIPS_COLLECTION_ID = import.meta.env.VITE_TRIPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIPS_COLLECTION_ID;
@@ -28,7 +28,8 @@ export default function AdminPage() {
   // Form for create/edit
   const emptyForm = { id: null, title: '', price: '', date: '', imageIds: [] };
   const [form, setForm] = useState(emptyForm);
-  const [stops, setStops] = useState([]); // { id?, name, description, file }
+  // stops: array of { id?, name, description, images: [ imageId|string | File ] }
+  const [stops, setStops] = useState([]);
   const [tripFiles, setTripFiles] = useState([]);
   const [replacedImages, setReplacedImages] = useState({}); // index -> File
   const [removedImageIndices, setRemovedImageIndices] = useState([]);
@@ -87,9 +88,24 @@ export default function AdminPage() {
   }
 
   // Trip stop helpers
-  const addStop = () => setStops((s) => [...s, { name: '', description: '', file: null }]);
+  const addStop = () => setStops((s) => [...s, { name: '', description: '', images: [] }]);
   const updateStop = (idx, patch) => setStops((s) => s.map((st, i) => (i === idx ? { ...st, ...patch } : st)));
   const removeStop = (idx) => setStops((s) => s.filter((_, i) => i !== idx));
+
+  const addFilesToStop = (idx, files) => {
+    if (!files || files.length === 0) return;
+    const arr = Array.from(files);
+    setStops((s) => s.map((st, i) => (i === idx ? { ...st, images: [...(st.images || []), ...arr] } : st)));
+  };
+
+  const removeImageFromStop = (idx, imageIndex) => {
+    setStops((s) => s.map((st, i) => {
+      if (i !== idx) return st;
+      const imgs = Array.isArray(st.images) ? [...st.images] : [];
+      imgs.splice(imageIndex, 1);
+      return { ...st, images: imgs };
+    }));
+  };
 
   async function saveTrip(e) {
     if (e && e.preventDefault) e.preventDefault();
@@ -137,31 +153,73 @@ export default function AdminPage() {
         tripDoc = await databases.createDocument(DB_ID, TRIPS_COLLECTION_ID, 'unique()', payload);
       }
 
-      // Handle stops: create new stops or update existing ones
+      // Handle stops: support multiple images per stop (images array may contain File objects or existing image IDs)
       if (TRIP_STOPS_COLLECTION_ID && stops.length > 0) {
+        let imagesUnsupported = false; // set to true if backend rejects 'images' attribute
         for (const st of stops) {
+          // Prepare images: upload any File objects and collect final image ids
+          const finalImageIds = [];
+          if (Array.isArray(st.images)) {
+            for (const item of st.images) {
+              if (item instanceof File) {
+                const res = await storage.createFile(BUCKET_ID, 'unique()', item);
+                finalImageIds.push(res.$id);
+              } else if (typeof item === 'string' && item) {
+                finalImageIds.push(item);
+              }
+            }
+          }
+
+          // Try to save using the new 'images' array first. If the Appwrite collection
+          // doesn't have an 'images' attribute configured, Appwrite will reject the
+          // document. In that case, retry with the legacy single 'imageId' attribute
+          // (first image) so the save still succeeds.
           if (st.id) {
-            // update existing stop if changed or if a replacement file provided
-            const updatePayload = { name: st.name, description: st.description };
-            if (st.file && st.file instanceof File) {
-              const res = await storage.createFile(BUCKET_ID, 'unique()', st.file);
-              updatePayload.imageId = res.$id;
+            const updatePayload = { name: st.name, description: st.description, images: finalImageIds };
+            try {
+              await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, updatePayload);
+            } catch (err) {
+              const msg = String(err?.message || err || '');
+              if (/Unknown attribute|Invalid document structure|unknown attribute/i.test(msg)) {
+                // fallback to single imageId
+                imagesUnsupported = true;
+                const fallback = { name: st.name, description: st.description, imageId: finalImageIds[0] || null };
+                await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, fallback);
+              } else {
+                throw err;
+              }
             }
-            await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, updatePayload);
           } else {
-            let stopImageId = null;
-            if (st.file) {
-              const res = await storage.createFile(BUCKET_ID, 'unique()', st.file);
-              stopImageId = res.$id;
-            }
-            await databases.createDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, 'unique()', {
+            const createPayload = {
               tripId: tripDoc.$id,
               name: st.name,
               description: st.description,
-              imageId: stopImageId,
+              images: finalImageIds,
               order: st.order || 0,
-            });
+            };
+            try {
+              await databases.createDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, 'unique()', createPayload);
+            } catch (err) {
+              const msg = String(err?.message || err || '');
+              if (/Unknown attribute|Invalid document structure|unknown attribute/i.test(msg)) {
+                imagesUnsupported = true;
+                const fallback = {
+                  tripId: tripDoc.$id,
+                  name: st.name,
+                  description: st.description,
+                  imageId: finalImageIds[0] || null,
+                  order: st.order || 0,
+                };
+                await databases.createDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, 'unique()', fallback);
+              } else {
+                throw err;
+              }
+            }
           }
+        }
+
+        if (imagesUnsupported) {
+          setMessage('Note: collection does not have "images" attribute. Saved stops using single imageId fallback. To enable multi-image stops, add an "images" attribute (array of strings) in Appwrite console for the Trip Stops collection.');
         }
       }
 
@@ -322,7 +380,20 @@ export default function AdminPage() {
                     <div key={idx} className="border p-2 rounded">
                       <input placeholder="Stop name" value={st.name || ''} onChange={(e) => updateStop(idx, { name: e.target.value })} className="w-full mb-1 p-1 border rounded" />
                       <textarea placeholder="Description" value={st.description || ''} onChange={(e) => updateStop(idx, { description: e.target.value })} className="w-full mb-1 p-1 border rounded" />
-                      <input type="file" accept="image/*" onChange={(e) => updateStop(idx, { file: e.target.files?.[0] || null })} />
+                      <div className="mb-2">
+                        <label className="text-sm">Stop images (you can add multiple):</label>
+                        <input type="file" accept="image/*" multiple onChange={(e) => addFilesToStop(idx, e.target.files)} />
+                      </div>
+                      {st.images && st.images.length > 0 && (
+                        <div className="grid grid-cols-4 gap-2 mb-2">
+                          {st.images.map((img, i) => (
+                            <div key={i} className="relative border rounded overflow-hidden">
+                              <img src={typeof img === 'string' ? getStopImageUrl(img) : URL.createObjectURL(img)} className="w-full h-20 object-cover" alt={`stop-${i}`} />
+                              <button type="button" onClick={() => removeImageFromStop(idx, i)} className="absolute top-1 right-1 bg-white/80 rounded px-1 text-red-600">x</button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       <div className="mt-1 text-right"><button type="button" onClick={() => removeStop(idx)} className="text-red-500 text-sm">Remove</button></div>
                     </div>
                   ))}
