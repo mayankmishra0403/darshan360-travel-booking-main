@@ -126,7 +126,7 @@ export default function HomePage() {
                       } catch (e) {
                         console.warn('Book now fallback failed', e?.message || e);
                       }
-                      window.open('http://razorpay.me/@mayanksoni8625', '_blank', 'noopener');
+                      window.open('https://rzp.io/rzp/kPlkKOD', '_blank', 'noopener');
                     }}
                     style={{ 
                       background: 'linear-gradient(-45deg, #FF6B6B, #FF8E53, #FFA07A, #FFB88C)',

@@ -19,7 +19,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 
 function Nav() {
-  const { user, isAdmin, logout } = useAuth();
+  const { user, isAdmin } = useAuth();
   const location = useLocation();
   const isHome = location?.pathname === '/';
   return (
@@ -106,12 +106,7 @@ function Nav() {
                   </div>
                   <span className={(isHome ? 'hidden sm:block font-medium text-white' : 'hidden sm:block font-medium')}>{user.name}</span>
                 </Link>
-                <button
-                  onClick={logout}
-                  className={(isHome ? 'text-white hover:text-gray-200' : 'text-gray-500 hover:text-gray-700') + ' text-sm transition-colors'}
-                >
-                  Logout
-                </button>
+                {/* Logout moved to Profile page - users should sign out from their profile */}
               </div>
             ) : (
               <div className="flex items-center space-x-3">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { databases, storage } from '../lib/backend';
-import { getTripImageUrl, getStopImageUrl } from '../services/trips';
+import { getTripImageUrl, getStopImageUrl, getStopVideoUrl } from '../services/trips';
 
 const DB_ID = import.meta.env.VITE_DATABASE_ID || import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const TRIPS_COLLECTION_ID = import.meta.env.VITE_TRIPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIPS_COLLECTION_ID;
@@ -28,6 +28,8 @@ export default function AdminPage() {
   // Form for create/edit
   const emptyForm = { id: null, title: '', price: '', date: '', imageIds: [] };
   const [form, setForm] = useState(emptyForm);
+  const [tripVideo, setTripVideo] = useState(null);
+  const [tripVideoId, setTripVideoId] = useState(null);
   // stops: array of { id?, name, description, images: [ imageId|string | File ] }
   const [stops, setStops] = useState([]);
   const [tripFiles, setTripFiles] = useState([]);
@@ -88,7 +90,7 @@ export default function AdminPage() {
   }
 
   // Trip stop helpers
-  const addStop = () => setStops((s) => [...s, { name: '', description: '', images: [] }]);
+  const addStop = () => setStops((s) => [...s, { name: '', description: '', images: [], video: null, videoId: null }]);
   const updateStop = (idx, patch) => setStops((s) => s.map((st, i) => (i === idx ? { ...st, ...patch } : st)));
   const removeStop = (idx) => setStops((s) => s.filter((_, i) => i !== idx));
 
@@ -105,6 +107,13 @@ export default function AdminPage() {
       imgs.splice(imageIndex, 1);
       return { ...st, images: imgs };
     }));
+  };
+
+  const setVideoForStop = (idx, file) => {
+    setStops((s) => s.map((st, i) => (i === idx ? { ...st, video: file, videoId: null } : st)));
+  };
+  const clearVideoForStop = (idx) => {
+    setStops((s) => s.map((st, i) => (i === idx ? { ...st, video: null, videoId: null } : st)));
   };
 
   async function saveTrip(e) {
@@ -146,6 +155,21 @@ export default function AdminPage() {
         imageIds: finalIds,
       };
 
+      // Handle trip-level video upload (if provided)
+      let uploadedTripVideoId = null;
+      if (tripVideo instanceof File) {
+        try {
+          const r = await storage.createFile(BUCKET_ID, 'unique()', tripVideo);
+          uploadedTripVideoId = r.$id;
+          // attach to payload; if backend doesn't accept it we'll cleanup later
+          payload.videoId = r.$id;
+        } catch (err) {
+          console.warn('Failed to upload trip-level video:', err?.message || err);
+        }
+      } else if (typeof tripVideoId === 'string' && tripVideoId) {
+        payload.videoId = tripVideoId;
+      }
+
       let tripDoc;
       if (form.id) {
         tripDoc = await databases.updateDocument(DB_ID, TRIPS_COLLECTION_ID, form.id, payload);
@@ -153,9 +177,13 @@ export default function AdminPage() {
         tripDoc = await databases.createDocument(DB_ID, TRIPS_COLLECTION_ID, 'unique()', payload);
       }
 
+  // If trip-level video wasn't accepted by the backend (unknown attribute), remove uploaded file
+  // We detect this later after stops processing since we only know response errors during create/update.
+
       // Handle stops: support multiple images per stop (images array may contain File objects or existing image IDs)
       if (TRIP_STOPS_COLLECTION_ID && stops.length > 0) {
         let imagesUnsupported = false; // set to true if backend rejects 'images' attribute
+        let videoUnsupported = false;  // set to true if backend rejects 'videoId' attribute
         for (const st of stops) {
           // Prepare images: upload any File objects and collect final image ids
           const finalImageIds = [];
@@ -170,21 +198,42 @@ export default function AdminPage() {
             }
           }
 
+          // Upload video if provided as File
+      let videoId = st.videoId || null;
+      let uploadedVideoId = null;
+          if (st.video instanceof File) {
+            try {
+              const v = await storage.createFile(BUCKET_ID, 'unique()', st.video);
+              videoId = v.$id;
+        uploadedVideoId = v.$id;
+            } catch (err) {
+              console.warn('Failed to upload stop video:', err?.message || err);
+            }
+          }
+
           // Try to save using the new 'images' array first. If the Appwrite collection
           // doesn't have an 'images' attribute configured, Appwrite will reject the
           // document. In that case, retry with the legacy single 'imageId' attribute
           // (first image) so the save still succeeds.
           if (st.id) {
-            const updatePayload = { name: st.name, description: st.description, images: finalImageIds };
+            const updatePayload = { name: st.name, description: st.description, images: finalImageIds, videoId };
             try {
               await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, updatePayload);
-            } catch (err) {
+    } catch (err) {
               const msg = String(err?.message || err || '');
               if (/Unknown attribute|Invalid document structure|unknown attribute/i.test(msg)) {
                 // fallback to single imageId
                 imagesUnsupported = true;
                 const fallback = { name: st.name, description: st.description, imageId: finalImageIds[0] || null };
                 await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, fallback);
+                if (uploadedVideoId) {
+                  try {
+                    await storage.deleteFile(BUCKET_ID, uploadedVideoId);
+                  } catch (delErr) {
+                    console.warn('Failed to cleanup uploaded video on fallback:', delErr?.message || delErr);
+                  }
+      videoUnsupported = true;
+                }
               } else {
                 throw err;
               }
@@ -195,6 +244,7 @@ export default function AdminPage() {
               name: st.name,
               description: st.description,
               images: finalImageIds,
+              videoId,
               order: st.order || 0,
             };
             try {
@@ -211,6 +261,14 @@ export default function AdminPage() {
                   order: st.order || 0,
                 };
                 await databases.createDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, 'unique()', fallback);
+                if (uploadedVideoId) {
+                  try {
+                    await storage.deleteFile(BUCKET_ID, uploadedVideoId);
+                  } catch (delErr) {
+                    console.warn('Failed to cleanup uploaded video on fallback:', delErr?.message || delErr);
+                  }
+                  videoUnsupported = true;
+                }
               } else {
                 throw err;
               }
@@ -218,8 +276,22 @@ export default function AdminPage() {
           }
         }
 
-        if (imagesUnsupported) {
-          setMessage('Note: collection does not have "images" attribute. Saved stops using single imageId fallback. To enable multi-image stops, add an "images" attribute (array of strings) in Appwrite console for the Trip Stops collection.');
+        if (imagesUnsupported || videoUnsupported) {
+          let msg = '';
+          if (imagesUnsupported) {
+            msg += 'Note: collection lacks "images" attribute; saved stops using legacy single imageId. Add "images" (array<string>) to Trip Stops in Appwrite. ';
+          }
+          if (videoUnsupported) {
+            msg += 'Note: collection lacks "videoId" attribute; the uploaded video could not be saved. Add a "videoId" (string) attribute to Trip Stops in Appwrite.';
+          }
+          // If trip-level video was uploaded but collection doesn't accept videoId, cleanup and mention it
+          if (uploadedTripVideoId) {
+            try {
+              await storage.deleteFile(BUCKET_ID, uploadedTripVideoId);
+            } catch (delErr) { console.warn('Failed to cleanup uploaded trip video:', delErr?.message || delErr); }
+            msg += ' Also: trip-level video was uploaded but could not be saved; add "videoId" to the Trips collection.';
+          }
+          setMessage(msg.trim());
         }
       }
 
@@ -240,6 +312,8 @@ export default function AdminPage() {
 
   async function editTrip(t) {
     setForm({ id: t.$id, title: t.title || '', price: t.price || '', date: t.date || '', imageIds: t.imageIds || [] });
+    setTripVideoId(t.videoId || null);
+    setTripVideo(null);
   setReplacedImages({});
   setRemovedImageIndices([]);
     // load stops for trip
@@ -248,7 +322,16 @@ export default function AdminPage() {
         const res = await databases.listDocuments(DB_ID, TRIP_STOPS_COLLECTION_ID, [
           // order not required but helpful
         ]);
-        const mine = (res.documents || []).filter((s) => s.tripId === t.$id).map((s) => ({ id: s.$id, name: s.name, description: s.description, imageId: s.imageId }));
+        const mine = (res.documents || [])
+          .filter((s) => s.tripId === t.$id)
+          .map((s) => ({
+            id: s.$id,
+            name: s.name,
+            description: s.description,
+            imageId: s.imageId,
+            images: Array.isArray(s.images) ? s.images : (s.imageId ? [s.imageId] : []),
+            videoId: s.videoId || null,
+          }));
         setStops(mine);
       } catch (err) {
         console.warn('Failed to load stops for edit:', err?.message || err);
@@ -384,6 +467,16 @@ export default function AdminPage() {
                         <label className="text-sm">Stop images (you can add multiple):</label>
                         <input type="file" accept="image/*" multiple onChange={(e) => addFilesToStop(idx, e.target.files)} />
                       </div>
+                      <div className="mb-2">
+                        <label className="text-sm">Stop video (optional):</label>
+                        <input type="file" accept="video/*" onChange={(e) => setVideoForStop(idx, e.target.files?.[0] || null)} />
+            {(st.video || st.videoId) && (
+                          <div className="mt-2">
+              <video src={st.video ? URL.createObjectURL(st.video) : (st.videoId ? getStopVideoUrl(st.videoId) : '')} className="w-full max-h-40" controls />
+                            <button type="button" onClick={() => clearVideoForStop(idx)} className="text-xs mt-1 px-2 py-1 bg-red-100 rounded">Remove video</button>
+                          </div>
+                        )}
+                      </div>
                       {st.images && st.images.length > 0 && (
                         <div className="grid grid-cols-4 gap-2 mb-2">
                           {st.images.map((img, i) => (
@@ -426,6 +519,18 @@ export default function AdminPage() {
                 )}
 
                 <input type="file" accept="image/*" multiple onChange={(e) => setTripFiles(Array.from(e.target.files || []))} />
+                <div className="mt-2">
+                  <label className="block text-sm font-medium mb-1">Trip video (optional)</label>
+                  <input type="file" accept="video/*" onChange={(e) => { setTripVideo(e.target.files?.[0] || null); setTripVideoId(null); }} />
+                  {(tripVideo || tripVideoId) && (
+                    <div className="mt-2">
+                      <video src={tripVideo ? URL.createObjectURL(tripVideo) : (tripVideoId ? getStopVideoUrl(tripVideoId) : '')} className="w-full max-h-40" controls />
+                      <div className="flex gap-2 mt-1">
+                        <button type="button" onClick={() => { setTripVideo(null); setTripVideoId(null); }} className="text-xs px-2 py-1 bg-red-100 rounded">Remove</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-2">

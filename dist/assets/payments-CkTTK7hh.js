@@ -1,0 +1,1 @@
+import{e as s,R as r,d as n}from"./index-DEwbglG8.js";const o="travel_db",c="68a1e4dd000b208d3eea";async function u({id:t,data:e}){const a=[s.read(r.user(e.userId)),s.update(r.user(e.userId))];return n.createDocument(o,c,t,e,a)}export{u as c};

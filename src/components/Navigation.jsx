@@ -3,7 +3,7 @@ import { useAuth } from '../context/auth';
 import { motion } from 'framer-motion';
 
 export default function Navigation() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <motion.nav 
@@ -70,12 +70,7 @@ export default function Navigation() {
                   </div>
                   <span className="hidden sm:block font-medium">{user.name}</span>
                 </Link>
-                <button
-                  onClick={logout}
-                  className="text-gray-500 hover:text-gray-700 text-sm transition-colors"
-                >
-                  Logout
-                </button>
+                {/* Logout moved to Profile page - users should sign out from their profile */}
               </div>
             ) : (
               <div className="flex items-center space-x-3">

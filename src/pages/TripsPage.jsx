@@ -48,8 +48,8 @@ export default function TripsPage() {
 				console.warn('Failed to create payment record', e);
 			}
 
-			const upiLink = 'http://razorpay.me/@mayanksoni8625';
-			window.open(upiLink, '_blank');
+			const upiLink = 'https://rzp.io/rzp/kPlkKOD';
+			window.open(upiLink, '_blank', 'noopener');
 		} catch (err) {
 			console.error('Failed to create fallback booking', err);
 			alert('Failed to create booking. Please try again.');

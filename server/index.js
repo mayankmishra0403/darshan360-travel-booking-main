@@ -6,6 +6,7 @@ import cors from 'cors';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { Client, Databases, Permission, Role } from 'node-appwrite';
+import { Buffer } from 'buffer';
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
@@ -22,14 +23,18 @@ const {
   APPWRITE_DATABASE_ID,
   APPWRITE_BOOKINGS_COLLECTION_ID,
   APPWRITE_PAYMENTS_COLLECTION_ID,
+  APPWRITE_BUCKET_ID,
   // Fallback to frontend-style names if provided
   VITE_API_ENDPOINT,
   VITE_PROJECT_ID,
   VITE_DATABASE_ID,
   VITE_BOOKINGS_COLLECTION_ID,
   VITE_PAYMENTS_COLLECTION_ID,
+  VITE_BUCKET_ID,
   // Optional server-only API key name
   SERVER_APPWRITE_API_KEY,
+  // Optional: comma-separated list of allowed origins for media proxy (e.g. https://darshan360.netlify.app,http://localhost:5173)
+  SERVER_ALLOWED_ORIGINS,
 } = process.env;
 
 const AW_ENDPOINT = APPWRITE_ENDPOINT || VITE_API_ENDPOINT;
@@ -38,6 +43,9 @@ const AW_API_KEY = APPWRITE_API_KEY || SERVER_APPWRITE_API_KEY;
 const AW_DB_ID = APPWRITE_DATABASE_ID || VITE_DATABASE_ID;
 const AW_BOOKINGS_ID = APPWRITE_BOOKINGS_COLLECTION_ID || VITE_BOOKINGS_COLLECTION_ID;
 const AW_PAYMENTS_ID = APPWRITE_PAYMENTS_COLLECTION_ID || VITE_PAYMENTS_COLLECTION_ID;
+const AW_BUCKET = APPWRITE_BUCKET_ID || VITE_BUCKET_ID;
+// Parse allowed origins from env into an array
+const ALLOWED_ORIGINS = (SERVER_ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
 
 if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
   console.warn('Warning: RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET not set. Set them in server/.env');
@@ -187,4 +195,76 @@ app.post('/record-payment-failure', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
+});
+
+// Media proxy: stream files from Appwrite storage using server admin key to avoid CORS/private-bucket issues.
+app.get('/media/:fileId', async (req, res) => {
+  try {
+    // Enforce allowed origins if configured. Use Origin header first, then Referer as fallback.
+    if (ALLOWED_ORIGINS.length > 0) {
+      const originHeader = req.get('origin');
+      const referer = req.get('referer');
+      // Normalize referer to origin (protocol + host + port)
+      const refererOrigin = (referer && (() => { try { const u = new URL(referer); return u.origin; } catch { return null; } })());
+      const requestOrigin = originHeader || refererOrigin || null;
+      if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
+        return res.status(403).send('Forbidden: origin not allowed');
+      }
+    }
+    const fileId = req.params.fileId;
+    const bucketId = AW_BUCKET;
+    if (!bucketId) return res.status(400).send('Bucket ID not configured on server');
+
+    const base = (AW_ENDPOINT || '').replace(/\/$/, '');
+    const project = AW_PROJECT;
+    const apiKey = AW_API_KEY;
+
+    if (!base || !project || !apiKey) {
+      return res.status(500).send('Server Appwrite env not configured (endpoint/project/key)');
+    }
+
+    const url = `${base}/storage/buckets/${bucketId}/files/${fileId}/view?project=${project}`;
+
+    // Use global fetch (Node 18+) to request the file with admin key
+    const upstream = await fetch(url, {
+      headers: {
+        'X-Appwrite-Project': project,
+        'X-Appwrite-Key': apiKey,
+      },
+    });
+
+    if (!upstream.ok) {
+      const text = await upstream.text().catch(() => '');
+      return res.status(upstream.status).send(text || `Upstream error ${upstream.status}`);
+    }
+
+    const contentType = upstream.headers.get('content-type');
+    if (contentType) res.setHeader('content-type', contentType);
+    // Forward cache-control if present
+    const cache = upstream.headers.get('cache-control');
+    if (cache) res.setHeader('cache-control', cache);
+
+    // Pipe the response body to client
+    const reader = upstream.body.getReader();
+    // Convert readable stream to Node stream
+    const { Readable } = await import('stream');
+    const stream = new Readable({ read() {} });
+    (async () => {
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          // Use Buffer.from to convert Uint8Array chunk to Buffer
+          stream.push(Buffer.from(value));
+        }
+        stream.push(null);
+      } catch (err) {
+        stream.destroy(err);
+      }
+    })();
+    stream.pipe(res);
+  } catch (err) {
+    console.error('media proxy error', err);
+    res.status(500).send('Failed to proxy media');
+  }
 });

@@ -9,6 +9,7 @@ const TRIP_STOPS_COLLECTION_ID = import.meta.env.VITE_TRIP_STOPS_COLLECTION_ID |
 // This avoids relying on SDK methods that may return objects/promises and lets the UI use a simple string URL.
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || import.meta.env.VITE_APPWRITE_ENDPOINT || '';
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID || import.meta.env.VITE_APPWRITE_PROJECT_ID || '';
+const MEDIA_PROXY = import.meta.env.VITE_MEDIA_PROXY || '';
 
 function buildPreviewUrl(bucketId, fileId, width = 1200, height = 800, quality = 100, mode = 'center') {
   if (!API_ENDPOINT || !PROJECT_ID || !bucketId || !fileId) return '';
@@ -41,6 +42,7 @@ export function formatTrip(doc) {
     imageIds: Array.isArray(doc.imageIds)
       ? doc.imageIds
       : (doc.imageId ? [doc.imageId] : []),
+    videoId: doc.videoId || null,
     // Stops can be stored as array of strings (legacy) or array of objects { name, description, imageId }
     stops: Array.isArray(doc.stops)
       ? doc.stops.map((s) => {
@@ -53,6 +55,12 @@ export function formatTrip(doc) {
   };
 }
 
+export function getTripVideoUrl(fileId) {
+  if (!fileId) return '';
+  if (MEDIA_PROXY) return `${MEDIA_PROXY.replace(/\/$/, '')}/${fileId}`;
+  return buildViewUrl(BUCKET_ID, fileId);
+}
+
 export function getTripImageUrl(imageId, { full = true } = {}) {
   if (!imageId) return '';
   // Default to full-quality original view. If consumers want a preview/thumb, pass { full: false }
@@ -62,6 +70,13 @@ export function getTripImageUrl(imageId, { full = true } = {}) {
 export function getStopImageUrl(imageId, { full = true } = {}) {
   if (!imageId) return '';
   return full ? buildViewUrl(BUCKET_ID, imageId) : buildPreviewUrl(BUCKET_ID, imageId, 1200, 800, 100, 'center');
+}
+
+// Videos should use the original view URL so the browser can stream them properly
+export function getStopVideoUrl(fileId) {
+  if (!fileId) return '';
+  if (MEDIA_PROXY) return `${MEDIA_PROXY.replace(/\/$/, '')}/${fileId}`;
+  return buildViewUrl(BUCKET_ID, fileId);
 }
 
 export function getTripImageUrls(imageIds = []) {
@@ -85,6 +100,7 @@ export async function listStopsByTrip(tripId) {
     name: d.name,
     description: d.description,
     imageId: d.imageId,
+  videoId: d.videoId || null,
     order: d.order,
   }));
 }
@@ -99,6 +115,7 @@ export async function getStop(id) {
     name: d.name,
     description: d.description,
     imageId: d.imageId,
+  videoId: d.videoId || null,
     images: Array.isArray(d.images) ? d.images : (d.imageId ? [d.imageId] : []),
   };
 }

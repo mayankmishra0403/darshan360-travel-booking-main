@@ -4,11 +4,11 @@ import { useAuth } from '../context/auth';
 import { motion } from 'framer-motion';
 
 export default function LoginPage() {
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, user, loading } = useAuth();
   const nav = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
 
@@ -21,6 +21,13 @@ export default function LoginPage() {
       }
     } catch (err) { console.debug('localStorage read failed', err); }
   }, []);
+
+  // If the user is already authenticated (e.g. returned from OAuth redirect), send them home
+  useEffect(() => {
+    if (!loading && user) {
+      nav('/');
+    }
+  }, [user, loading, nav]);
 
   const validate = () => {
     if (!form.email || !form.password) {
@@ -39,7 +46,7 @@ export default function LoginPage() {
   const submit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    setLoading(true);
+  setSubmitting(true);
     try {
       await login(form);
       if (remember) localStorage.setItem('remember_email', form.email);
@@ -47,7 +54,7 @@ export default function LoginPage() {
       nav('/');
     } catch (err) {
       setError(err?.message || 'Login failed');
-    } finally { setLoading(false); }
+    } finally { setSubmitting(false); }
   };
 
   return (
@@ -103,8 +110,8 @@ export default function LoginPage() {
 
           {error && <div className="text-red-600 text-sm">{error}</div>}
 
-          <button disabled={loading} type="submit" className="w-full bg-blue-600 disabled:opacity-60 text-white py-2 rounded-lg font-semibold">
-            {loading ? 'Signing in...' : 'Sign in'}
+          <button disabled={submitting} type="submit" className="w-full bg-blue-600 disabled:opacity-60 text-white py-2 rounded-lg font-semibold">
+            {submitting ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 

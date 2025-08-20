@@ -151,7 +151,7 @@ export default function TripCard({ trip, onPay }) {
                 } catch (e) {
                   console.warn('Book now fallback failed', e?.message || e);
                 }
-                window.open('http://razorpay.me/@mayanksoni8625', '_blank', 'noopener');
+                window.open('https://rzp.io/rzp/kPlkKOD', '_blank', 'noopener');
                 onPay?.(trip);
               }}
               className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-2xl border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300"

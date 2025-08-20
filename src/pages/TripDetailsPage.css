@@ -1,0 +1,217 @@
+/* Dynamic styling animations for TripDetailsPage */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Custom floating bubble animations */
+@keyframes bubble-float-1 {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  25% { transform: translateY(-15px) translateX(10px) rotate(90deg); }
+  50% { transform: translateY(-30px) translateX(-5px) rotate(180deg); }
+  75% { transform: translateY(-15px) translateX(-10px) rotate(270deg); }
+}
+
+@keyframes bubble-float-2 {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+  33% { transform: translateY(-20px) translateX(15px) rotate(120deg) scale(1.1); }
+  66% { transform: translateY(-10px) translateX(-15px) rotate(240deg) scale(0.9); }
+}
+
+@keyframes bubble-float-3 {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-25px) translateX(8px) rotate(180deg); opacity: 0.6; }
+}
+
+/* Enhanced card hover effects */
+.trip-card-enhanced {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.trip-card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.trip-card-enhanced:hover::before {
+  left: 100%;
+}
+
+/* Dynamic background with particles */
+.dynamic-background {
+  position: relative;
+  overflow: hidden;
+}
+
+.dynamic-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+  animation: gradient-shift 8s ease infinite;
+  background-size: 400% 400%;
+  pointer-events: none;
+}
+
+/* Responsive glitch effect for titles */
+.glitch-text {
+  position: relative;
+  color: white;
+  text-shadow: 
+    0.05em 0 0 rgba(255, 0, 0, 0.75),
+    -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+    0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% {
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  95% {
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.125em -0.05em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+}
+
+/* Enhanced button styles */
+.dynamic-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.dynamic-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.dynamic-button:hover::before {
+  left: 100%;
+}
+
+.dynamic-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Progress indicators */
+.progress-dot {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.progress-dot:hover::before,
+.progress-dot.active::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(2);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive animations */
+@media (max-width: 768px) {
+  .dynamic-background::before {
+    animation-duration: 12s;
+  }
+  
+  .trip-card-enhanced {
+    transform: none !important;
+  }
+  
+  .glitch-text {
+    animation: none;
+  }
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
