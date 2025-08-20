@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/auth';
 import { getTrip, getTripImageUrls, getStopImageUrl, listStopsByTrip } from '../services/trips';
 
 import PlaceAmenities from '../components/PlaceAmenities';
@@ -17,6 +18,8 @@ export default function TripDetailsPage() {
   const [direction, setDirection] = useState(0); // for slide animation
   const isFirstRender = useRef(true);
   const location = useLocation();
+  // Auth
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     (async () => {
@@ -69,13 +72,15 @@ export default function TripDetailsPage() {
     );
   }
 
-  // Debug: if stops are empty show a visible hint and admin link
+  // Debug: if stops are empty show a visible hint and admin link (visible only to admins)
   const renderStopsGrid = () => {
     if (!stops || stops.length === 0) {
       return (
         <div className="my-6 p-4 bg-yellow-50 border border-yellow-200 rounded text-yellow-800">
-          No places found for this trip. If you are the admin, open the Admin panel to add stops for this trip.
-          <div className="mt-2"><a href="/admin" className="text-sm text-blue-600 underline">Open Admin panel</a></div>
+          No places found for this trip.
+          {isAdmin && (
+            <div className="mt-2"><a href="/admin" className="text-sm text-blue-600 underline">Open Admin panel</a></div>
+          )}
         </div>
       );
     }
