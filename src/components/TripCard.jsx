@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getTripImageUrl } from '../services/trips';
 import { useAuth } from '../context/auth';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { createBookingWithIdFallback } from '../services/bookings';
 import { createPaymentWithId } from '../services/payments';
 
@@ -11,6 +11,26 @@ export default function TripCard({ trip, onPay }) {
   const { user } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const razorpayFormRef = useRef(null);
+  
+  useEffect(() => {
+    const form = razorpayFormRef.current;
+    if (!form) return;
+    // Do not initialize the same form twice
+    if (form.dataset.razorpayInitialized === 'true') return;
+
+    try {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
+      script.async = true;
+      script.setAttribute('data-payment_button_id', 'pl_R8LRTyYQ22F9Ql');
+      form.appendChild(script);
+      form.dataset.razorpayInitialized = 'true';
+    } catch (err) {
+      // don't block UI if injection fails
+      console.warn('Failed to inject Razorpay script into form', err?.message || err);
+    }
+  }, []);
   
   const img = getTripImageUrl(trip.imageIds?.[0]);
   const price = trip.price ? `₹${Number(trip.price).toLocaleString()}` : 'Price on request';
@@ -63,9 +83,9 @@ export default function TripCard({ trip, onPay }) {
 
         {/* New Badge */}
         <div className="absolute top-4 left-4">
-          <div className="bg-orange-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
-            Featured
-          </div>
+          {trip.priority ? (
+            <div className="bg-yellow-200 text-yellow-900 px-3 py-1 rounded-full text-xs font-semibold">PRIORITY</div>
+          ) : null}
         </div>
 
   {/* Overlay Gradient */}
@@ -151,7 +171,24 @@ export default function TripCard({ trip, onPay }) {
                 } catch (e) {
                   console.warn('Book now fallback failed', e?.message || e);
                 }
-                window.open('https://rzp.io/rzp/kPlkKOD', '_blank', 'noopener');
+                    // Try to trigger the hosted Razorpay payment button injected into the hidden form.
+                    try {
+                      const form = razorpayFormRef.current;
+                      if (form) {
+                        const btn = form.querySelector('button, a, input[type="submit"]');
+                        if (btn) {
+                          btn.click();
+                        } else {
+                          // Widget not ready
+                          alert('Payment widget not ready. Please try again in a moment.');
+                        }
+                      } else {
+                        alert('Payment widget not available. Please try again.');
+                      }
+                    } catch (err) {
+                      console.warn('Error triggering Razorpay button', err?.message || err);
+                      alert('Failed to open payment widget. Please try again.');
+                    }
                 onPay?.(trip);
               }}
               className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-2xl border-2 border-transparent hover:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-300"
@@ -177,10 +214,18 @@ export default function TripCard({ trip, onPay }) {
             </svg>
           </Link>
         </div>
+        {/* Hidden Razorpay hosted payment-button form (script will inject button here) */}
+        <div style={{ display: 'none' }} aria-hidden>
+          <form ref={razorpayFormRef}>
+            {/* Script is appended dynamically in useEffect so it executes correctly */}
+          </form>
+        </div>
       </div>
   </motion.div>
   );
 }
+
+// (script injection handled inside the component)
 
 // Animated multi-color glow effect
 // Add this to your global CSS (e.g., App.css or index.css):
@@ -209,8 +254,9 @@ TripCard.propTypes = {
     title: PropTypes.string.isRequired,
     price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     date: PropTypes.string,
-    imageIds: PropTypes.arrayOf(PropTypes.string),
-    stops: PropTypes.arrayOf(PropTypes.string),
+  imageIds: PropTypes.arrayOf(PropTypes.string),
+  stops: PropTypes.array,
+  priority: PropTypes.bool,
   }).isRequired,
   onPay: PropTypes.func,
 };

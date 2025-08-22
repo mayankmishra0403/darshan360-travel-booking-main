@@ -35,14 +35,7 @@ function Nav() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2" aria-label="Home">
-            <div
-              className={
-                'w-8 h-8 rounded-lg flex items-center justify-center ' +
-                (isHome ? 'bg-white/20' : 'bg-gradient-to-r from-blue-600 to-purple-600')
-              }
-            >
-              <span className={isHome ? 'text-white font-bold text-sm' : 'text-white font-bold text-sm'}>D</span>
-            </div>
+            <img src="/darshan.png" alt="Darshan 360" className={"w-8 h-8 object-cover rounded-lg " + (isHome ? 'ring ring-white/20' : '')} />
             {/* Brand text removed per request; logo retained */}
           </Link>
 
@@ -198,6 +191,11 @@ export default function App() {
               <AnimatedRoutes />
             </Suspense>
           </main>
+          {/* Small footer with placeholder for future self-hosted domain */}
+          <footer className="mt-8 py-4 text-center text-sm text-gray-500">
+            <div>Not yet launched on your domain — placeholder: <a href="https://darshan360.in.net" target="_blank" rel="noopener noreferrer" className="underline">darshan360.in.net</a></div>
+            <div className="text-xs text-gray-400">Currently served via Netlify; you&apos;ll be able to update this when you deploy to your server.</div>
+          </footer>
         </div>
       </BrowserRouter>
     </AuthProvider>

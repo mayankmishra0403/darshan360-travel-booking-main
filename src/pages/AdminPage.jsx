@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { databases, storage } from '../lib/backend';
 import { getTripImageUrl, getStopImageUrl, getStopVideoUrl } from '../services/trips';
+import * as contentService from '../services/content';
 
 const DB_ID = import.meta.env.VITE_DATABASE_ID || import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const TRIPS_COLLECTION_ID = import.meta.env.VITE_TRIPS_COLLECTION_ID || import.meta.env.VITE_APPWRITE_TRIPS_COLLECTION_ID;
@@ -12,6 +13,16 @@ const DEPLOY_HOOK = import.meta.env.VITE_NETLIFY_BUILD_HOOK || import.meta.env.V
 
 export default function AdminPage() {
   const [tab, setTab] = useState('trips');
+
+  // Services & Sections
+  const [services, setServices] = useState([]);
+  const [loadingServices, setLoadingServices] = useState(false);
+  // reuse trips from above (already present)
+  const [sections, setSections] = useState([]);
+  const [loadingSections, setLoadingSections] = useState(false);
+  // forms for services/sections
+  const [serviceForm, setServiceForm] = useState({ id: null, title: '', description: '', imageFile: null, imageId: null, order: 0 });
+  const [sectionForm, setSectionForm] = useState({ id: null, key: '', title: '', content: '', imageFile: null, imageId: null, order: 0 });
 
   // Trips state
   const [trips, setTrips] = useState([]);
@@ -26,7 +37,7 @@ export default function AdminPage() {
   const [loadingPayments, setLoadingPayments] = useState(false);
 
   // Form for create/edit
-  const emptyForm = { id: null, title: '', price: '', date: '', imageIds: [] };
+  const emptyForm = { id: null, title: '', price: '', date: '', imageIds: [], priority: false };
   const [form, setForm] = useState(emptyForm);
   const [tripVideo, setTripVideo] = useState(null);
   const [tripVideoId, setTripVideoId] = useState(null);
@@ -42,7 +53,109 @@ export default function AdminPage() {
     if (tab === 'trips') loadTrips();
     if (tab === 'bookings') loadBookings();
     if (tab === 'payments') loadPayments();
+    if (tab === 'services') loadServices();
+    if (tab === 'sections') loadSections();
   }, [tab]);
+
+  async function loadServices() {
+    setLoadingServices(true);
+    setMessage('');
+    try {
+      const res = await contentService.listServices();
+      setServices(res || []);
+    } catch (e) {
+      console.error(e);
+      setMessage(e.message || 'Failed to load services');
+    } finally {
+      setLoadingServices(false);
+    }
+  }
+
+  async function loadSections() {
+    setLoadingSections(true);
+    setMessage('');
+    try {
+      const res = await contentService.listSections();
+      setSections(res || []);
+    } catch (e) {
+      console.error(e);
+      setMessage(e.message || 'Failed to load sections');
+    } finally {
+      setLoadingSections(false);
+    }
+  }
+
+  async function saveService(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    setMessage('');
+    try {
+      if (serviceForm.id) {
+        await contentService.updateService(serviceForm.id, serviceForm);
+        setMessage('Service updated');
+      } else {
+        await contentService.createService(serviceForm);
+        setMessage('Service created');
+      }
+      setServiceForm({ id: null, title: '', description: '', imageFile: null, imageId: null, order: 0 });
+      loadServices();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Failed to save service');
+    }
+  }
+
+  async function editService(s) {
+    setServiceForm({ id: s.id, title: s.title || '', description: s.description || '', imageFile: null, imageId: s.imageId || null, order: s.order || 0 });
+    setTab('services');
+  }
+
+  async function removeService(id) {
+    if (!confirm('Delete service?')) return;
+    try {
+      await contentService.deleteService(id);
+      setMessage('Service deleted');
+      loadServices();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Failed to delete service');
+    }
+  }
+
+  async function saveSection(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    setMessage('');
+    try {
+      if (sectionForm.id) {
+        await contentService.updateSection(sectionForm.id, sectionForm);
+        setMessage('Section updated');
+      } else {
+        await contentService.createSection(sectionForm);
+        setMessage('Section created');
+      }
+      setSectionForm({ id: null, key: '', title: '', content: '', imageFile: null, imageId: null, order: 0 });
+      loadSections();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Failed to save section');
+    }
+  }
+
+  async function editSection(s) {
+    setSectionForm({ id: s.id, key: s.key || '', title: s.title || '', content: s.content || '', imageFile: null, imageId: s.imageId || null, order: s.order || 0 });
+    setTab('sections');
+  }
+
+  async function removeSection(id) {
+    if (!confirm('Delete section?')) return;
+    try {
+      await contentService.deleteSection(id);
+      setMessage('Section deleted');
+      loadSections();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.message || 'Failed to delete section');
+    }
+  }
 
   async function loadTrips() {
     if (!DB_ID || !TRIPS_COLLECTION_ID) return setMessage('Trips collection not configured');
@@ -90,7 +203,7 @@ export default function AdminPage() {
   }
 
   // Trip stop helpers
-  const addStop = () => setStops((s) => [...s, { name: '', description: '', images: [], video: null, videoId: null }]);
+  const addStop = () => setStops((s) => [...s, { name: '', description: '', images: [], video: null, videoId: null, extraDetails: '' }]);
   const updateStop = (idx, patch) => setStops((s) => s.map((st, i) => (i === idx ? { ...st, ...patch } : st)));
   const removeStop = (idx) => setStops((s) => s.filter((_, i) => i !== idx));
 
@@ -148,12 +261,14 @@ export default function AdminPage() {
         finalIds.push(...results.map((r) => r.$id));
       }
 
-      const payload = {
-        title: form.title,
-        price: Number(form.price || 0),
-        date: form.date || null,
-        imageIds: finalIds,
-      };
+          const payload = {
+            title: form.title,
+            price: Number(form.price || 0),
+            date: form.date || null,
+            imageIds: finalIds,
+            // persist priority flag (boolean)
+            priority: Boolean(form.priority),
+          };
 
       // Handle trip-level video upload (if provided)
       let uploadedTripVideoId = null;
@@ -171,6 +286,8 @@ export default function AdminPage() {
       }
 
       let tripDoc;
+      // Create or update the trip document normally. You added the `priority` attribute
+      // in Appwrite so we no longer need to strip it on failure.
       if (form.id) {
         tripDoc = await databases.updateDocument(DB_ID, TRIPS_COLLECTION_ID, form.id, payload);
       } else {
@@ -184,7 +301,7 @@ export default function AdminPage() {
       if (TRIP_STOPS_COLLECTION_ID && stops.length > 0) {
         let imagesUnsupported = false; // set to true if backend rejects 'images' attribute
         let videoUnsupported = false;  // set to true if backend rejects 'videoId' attribute
-        for (const st of stops) {
+  for (const st of stops) {
           // Prepare images: upload any File objects and collect final image ids
           const finalImageIds = [];
           if (Array.isArray(st.images)) {
@@ -217,9 +334,10 @@ export default function AdminPage() {
           // (first image) so the save still succeeds.
           if (st.id) {
             const updatePayload = { name: st.name, description: st.description, images: finalImageIds, videoId };
+            if (typeof st.extraDetails === 'string') updatePayload.extraDetails = st.extraDetails;
             try {
               await databases.updateDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, st.id, updatePayload);
-    } catch (err) {
+            } catch (err) {
               const msg = String(err?.message || err || '');
               if (/Unknown attribute|Invalid document structure|unknown attribute/i.test(msg)) {
                 // fallback to single imageId
@@ -232,7 +350,7 @@ export default function AdminPage() {
                   } catch (delErr) {
                     console.warn('Failed to cleanup uploaded video on fallback:', delErr?.message || delErr);
                   }
-      videoUnsupported = true;
+                  videoUnsupported = true;
                 }
               } else {
                 throw err;
@@ -247,6 +365,7 @@ export default function AdminPage() {
               videoId,
               order: st.order || 0,
             };
+            if (typeof st.extraDetails === 'string') createPayload.extraDetails = st.extraDetails;
             try {
               await databases.createDocument(DB_ID, TRIP_STOPS_COLLECTION_ID, 'unique()', createPayload);
             } catch (err) {
@@ -311,7 +430,7 @@ export default function AdminPage() {
   }
 
   async function editTrip(t) {
-    setForm({ id: t.$id, title: t.title || '', price: t.price || '', date: t.date || '', imageIds: t.imageIds || [] });
+  setForm({ id: t.$id, title: t.title || '', price: t.price || '', date: t.date || '', imageIds: t.imageIds || [], priority: Boolean(t.priority) });
     setTripVideoId(t.videoId || null);
     setTripVideo(null);
   setReplacedImages({});
@@ -415,6 +534,8 @@ export default function AdminPage() {
         <button onClick={() => setTab('bookings')} className={`px-3 py-1 rounded ${tab === 'bookings' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>Bookings</button>
         <button onClick={() => setTab('payments')} className={`px-3 py-1 rounded ${tab === 'payments' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>Payments</button>
         <button onClick={() => setTab('deploy')} className={`px-3 py-1 rounded ${tab === 'deploy' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>Deploy</button>
+        <button onClick={() => setTab('services')} className={`px-3 py-1 rounded ${tab === 'services' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>Services</button>
+        <button onClick={() => setTab('sections')} className={`px-3 py-1 rounded ${tab === 'sections' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}>Sections</button>
         <div className="ml-auto text-sm text-gray-600">{message}</div>
       </div>
 
@@ -433,7 +554,10 @@ export default function AdminPage() {
                 {trips.map((t) => (
                   <li key={t.$id} className="border rounded p-3 flex justify-between">
                     <div>
-                      <div className="font-semibold">{t.title}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="font-semibold">{t.title}</div>
+                        {t.priority && <div className="text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded">PRIORITY</div>}
+                      </div>
                       <div className="text-sm text-gray-600">Price: ₹{t.price} · Date: {t.date}</div>
                     </div>
                     <div className="flex gap-2">
@@ -453,6 +577,11 @@ export default function AdminPage() {
               <input className="w-full border p-2 rounded" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="Price" type="number" />
               <input className="w-full border p-2 rounded" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} placeholder="Date" type="date" />
 
+              <div className="flex items-center gap-2">
+                <input id="priority" type="checkbox" checked={!!form.priority} onChange={(e) => setForm({ ...form, priority: e.target.checked })} />
+                <label htmlFor="priority" className="text-sm">Priority (feature on Home page)</label>
+              </div>
+
               <div className="border p-2 rounded">
                 <div className="flex justify-between items-center mb-2">
                   <strong>Stops</strong>
@@ -463,6 +592,7 @@ export default function AdminPage() {
                     <div key={idx} className="border p-2 rounded">
                       <input placeholder="Stop name" value={st.name || ''} onChange={(e) => updateStop(idx, { name: e.target.value })} className="w-full mb-1 p-1 border rounded" />
                       <textarea placeholder="Description" value={st.description || ''} onChange={(e) => updateStop(idx, { description: e.target.value })} className="w-full mb-1 p-1 border rounded" />
+                      <textarea placeholder="Extra details (visible on stop details page)" value={st.extraDetails || ''} onChange={(e) => updateStop(idx, { extraDetails: e.target.value })} className="w-full mb-1 p-1 border rounded" />
                       <div className="mb-2">
                         <label className="text-sm">Stop images (you can add multiple):</label>
                         <input type="file" accept="image/*" multiple onChange={(e) => addFilesToStop(idx, e.target.files)} />
@@ -594,6 +724,107 @@ export default function AdminPage() {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+      )}
+
+      {tab === 'services' && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">Services we provide</h2>
+            <div>
+              <button onClick={loadServices} className="mr-2 px-2 py-1 bg-gray-100 rounded">Refresh</button>
+              <button onClick={() => setServiceForm({ id: null, title: '', description: '', imageFile: null, imageId: null, order: 0 })} className="px-2 py-1 bg-gray-100 rounded">New</button>
+            </div>
+          </div>
+          {loadingServices ? <div>Loading services...</div> : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="col-span-2">
+                <ul className="space-y-3">
+                  {services.map((s) => (
+                    <li key={s.id} className="border rounded p-3 flex justify-between items-center">
+                      <div>
+                        <div className="font-semibold">{s.title}</div>
+                        <div className="text-sm text-gray-600">{s.description?.slice(0, 120)}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => editService(s)} className="px-2 py-1 bg-yellow-100 rounded">Edit</button>
+                        <button onClick={() => removeService(s.id)} className="px-2 py-1 bg-red-100 rounded">Delete</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="col-span-1 bg-white rounded shadow p-4">
+                <h3 className="font-semibold mb-2">Create / Edit Service</h3>
+                <form onSubmit={saveService} className="space-y-2">
+                  <input className="w-full border p-2 rounded" value={serviceForm.title} onChange={(e) => setServiceForm({ ...serviceForm, title: e.target.value })} placeholder="Title" required />
+                  <textarea className="w-full border p-2 rounded" value={serviceForm.description} onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })} placeholder="Description" />
+                  <div>
+                    <label className="text-sm">Assign to Trip (optional)</label>
+                    <select className="w-full border p-2 rounded" value={serviceForm.tripId || ''} onChange={(e) => setServiceForm({ ...serviceForm, tripId: e.target.value || null })}>
+                      <option value="">-- Not associated with a trip --</option>
+                      {trips.map((t) => (
+                        <option key={t.$id} value={t.$id}>{t.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <input type="file" accept="image/*" onChange={(e) => setServiceForm({ ...serviceForm, imageFile: e.target.files?.[0] || null })} />
+                  <input type="number" className="w-full border p-2 rounded" value={serviceForm.order} onChange={(e) => setServiceForm({ ...serviceForm, order: Number(e.target.value || 0) })} placeholder="Order" />
+                  <div className="flex gap-2">
+                    <button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded">Save</button>
+                    <button type="button" onClick={() => setServiceForm({ id: null, title: '', description: '', imageFile: null, imageId: null, order: 0 })} className="px-3 py-1 rounded bg-gray-100">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'sections' && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">Site Sections (editable)</h2>
+            <div>
+              <button onClick={loadSections} className="mr-2 px-2 py-1 bg-gray-100 rounded">Refresh</button>
+              <button onClick={() => setSectionForm({ id: null, key: '', title: '', content: '', imageFile: null, imageId: null, order: 0 })} className="px-2 py-1 bg-gray-100 rounded">New</button>
+            </div>
+          </div>
+          {loadingSections ? <div>Loading sections...</div> : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="col-span-2">
+                <ul className="space-y-3">
+                  {sections.map((s) => (
+                    <li key={s.id} className="border rounded p-3 flex justify-between items-center">
+                      <div>
+                        <div className="font-semibold">{s.title || s.key}</div>
+                        <div className="text-sm text-gray-600">{(s.content || '').slice(0, 140)}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => editSection(s)} className="px-2 py-1 bg-yellow-100 rounded">Edit</button>
+                        <button onClick={() => removeSection(s.id)} className="px-2 py-1 bg-red-100 rounded">Delete</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-span-1 bg-white rounded shadow p-4">
+                <h3 className="font-semibold mb-2">Create / Edit Section</h3>
+                <form onSubmit={saveSection} className="space-y-2">
+                  <input className="w-full border p-2 rounded" value={sectionForm.key} onChange={(e) => setSectionForm({ ...sectionForm, key: e.target.value })} placeholder="Key (unique)" />
+                  <input className="w-full border p-2 rounded" value={sectionForm.title} onChange={(e) => setSectionForm({ ...sectionForm, title: e.target.value })} placeholder="Title" />
+                  <textarea className="w-full border p-2 rounded" value={sectionForm.content} onChange={(e) => setSectionForm({ ...sectionForm, content: e.target.value })} placeholder="Content (HTML or markdown)" rows={6} />
+                  <input type="file" accept="image/*" onChange={(e) => setSectionForm({ ...sectionForm, imageFile: e.target.files?.[0] || null })} />
+                  <input type="number" className="w-full border p-2 rounded" value={sectionForm.order} onChange={(e) => setSectionForm({ ...sectionForm, order: Number(e.target.value || 0) })} placeholder="Order" />
+                  <div className="flex gap-2">
+                    <button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded">Save</button>
+                    <button type="button" onClick={() => setSectionForm({ id: null, key: '', title: '', content: '', imageFile: null, imageId: null, order: 0 })} className="px-3 py-1 rounded bg-gray-100">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           )}
         </div>
       )}

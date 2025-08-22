@@ -43,6 +43,8 @@ export function formatTrip(doc) {
       ? doc.imageIds
       : (doc.imageId ? [doc.imageId] : []),
     videoId: doc.videoId || null,
+  // new priority flag (boolean) - admin can set this to highlight a trip on the homepage
+  priority: Boolean(doc.priority),
     // Stops can be stored as array of strings (legacy) or array of objects { name, description, imageId }
     stops: Array.isArray(doc.stops)
       ? doc.stops.map((s) => {
@@ -100,8 +102,10 @@ export async function listStopsByTrip(tripId) {
     name: d.name,
     description: d.description,
     imageId: d.imageId,
-  videoId: d.videoId || null,
+    videoId: d.videoId || null,
     order: d.order,
+    // only show admin-provided extra details; do not fall back to legacy fields
+    extraDetails: typeof d.extraDetails === 'string' && d.extraDetails.trim() ? d.extraDetails : null,
   }));
 }
 
@@ -116,6 +120,8 @@ export async function getStop(id) {
     description: d.description,
     imageId: d.imageId,
   videoId: d.videoId || null,
-    images: Array.isArray(d.images) ? d.images : (d.imageId ? [d.imageId] : []),
+  images: Array.isArray(d.images) ? d.images : (d.imageId ? [d.imageId] : []),
+  // only surface the admin-managed `extraDetails` field (do not fallback to legacy fields)
+  extraDetails: typeof d.extraDetails === 'string' && d.extraDetails.trim() ? d.extraDetails : null,
   };
 }

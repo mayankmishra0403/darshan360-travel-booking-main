@@ -1,37 +1,64 @@
 import { motion } from 'framer-motion';
 import heroImgFallback from '../../WhatsApp Image 2025-08-18 at 16.38.24_c7950d41.jpg';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { listTrips } from '../services/trips';
 import { getTripImageUrl } from '../services/trips';
 import { useAuth } from '../context/auth';
 import { createBookingWithIdFallback } from '../services/bookings';
 import { createPaymentWithId } from '../services/payments';
 import { Link } from 'react-router-dom';
+// ...existing code...
 
 export default function HomePage() {
   const [bg, setBg] = useState(null);
   const [firstTrip, setFirstTrip] = useState(null);
   const { user } = useAuth();
+  const razorpayFormRef = useRef(null);
+
+  useEffect(() => {
+    const form = razorpayFormRef.current;
+    if (!form) return;
+    if (form.dataset.razorpayInitialized === 'true') return;
+    try {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
+      script.async = true;
+      script.setAttribute('data-payment_button_id', 'pl_R8LRTyYQ22F9Ql');
+      form.appendChild(script);
+      form.dataset.razorpayInitialized = 'true';
+    } catch (err) {
+      console.warn('Failed to inject Razorpay script into HomePage form', err?.message || err);
+    }
+  }, []);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
       try {
         const trips = await listTrips();
-        const first = Array.isArray(trips) && trips.length ? trips[0] : null;
+        // Keep a copy for the Featured section.
+        if (mounted) setFeaturedTrips(Array.isArray(trips) ? trips : []);
+        // Prefer a trip marked as priority. Otherwise fallback to the first trip.
+        let first = null;
+        if (Array.isArray(trips) && trips.length) {
+          first = trips.find((t) => t.priority) || trips[0];
+        }
         const imgId = first?.imageIds?.[0];
         const url = imgId ? getTripImageUrl(imgId) : null;
         if (mounted) {
           setBg(url || heroImgFallback);
           setFirstTrip(first);
         }
-      } catch (e) {
+      } catch {
         if (mounted) setBg(heroImgFallback);
       }
     }
     load();
     return () => (mounted = false);
   }, []);
+  
+  // Featured trips list (driven by admin priority flag)
+  const [featuredTrips, setFeaturedTrips] = useState([]);
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Floating background bubbles */}
@@ -126,7 +153,20 @@ export default function HomePage() {
                       } catch (e) {
                         console.warn('Book now fallback failed', e?.message || e);
                       }
-                      window.open('https://rzp.io/rzp/kPlkKOD', '_blank', 'noopener');
+                      // Trigger the hosted Razorpay button inside the hidden form
+                      try {
+                        const form = razorpayFormRef.current;
+                        if (form) {
+                          const btn = form.querySelector('button, a, input[type="submit"]');
+                          if (btn) btn.click();
+                          else alert('Payment widget not ready. Please try again in a moment.');
+                        } else {
+                          alert('Payment widget not available. Please try again.');
+                        }
+                      } catch (err) {
+                        console.warn('Error triggering Razorpay button', err?.message || err);
+                        alert('Failed to open payment widget. Please try again.');
+                      }
                     }}
                     style={{ 
                       background: 'linear-gradient(-45deg, #FF6B6B, #FF8E53, #FFA07A, #FFB88C)',
@@ -165,6 +205,11 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100"></div>
                   </Link>
                 )}
+
+                {/* Hidden Razorpay form to host the payment-button script */}
+                <div style={{ display: 'none' }} aria-hidden>
+                  <form ref={razorpayFormRef} />
+                </div>
 
                 <Link
                   to={firstTrip ? `/trips/${firstTrip.id}` : '/trips'}
@@ -223,6 +268,35 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
         </div>
+        {/* Featured Trips section (driven by admin) */}
+        <section className="max-w-7xl mx-auto px-4 mt-8 pb-12">
+          <h2 className="text-2xl font-bold mb-4">Featured Trips</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredTrips && featuredTrips.length > 0 ? (
+              // Show priority trips first
+              [...featuredTrips].sort((a,b) => (b.priority === true) - (a.priority === true)).slice(0,6).map((t) => (
+                <div key={t.id} className="border rounded-lg overflow-hidden shadow-sm bg-white">
+                  <Link to={`/trips/${t.id}`} className="block h-48 overflow-hidden">
+                    <img src={t.imageIds?.[0] ? getTripImageUrl(t.imageIds[0]) : heroImgFallback} className="w-full h-full object-cover" alt={t.title} />
+                  </Link>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-lg">{t.title}</h3>
+                      {t.priority && <div className="text-xs bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded">PRIORITY</div>}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">{t.date || 'Flexible dates'}</div>
+                    <div className="mt-3 flex gap-2">
+                      <Link to={`/trips/${t.id}`} className="px-3 py-2 bg-gray-100 rounded">Details</Link>
+                      <Link to={`/trips/${t.id}`} className="px-3 py-2 bg-blue-600 text-white rounded">Book</Link>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-600">No featured trips yet. Add trips in the Admin panel and mark them as priority.</div>
+            )}
+          </div>
+        </section>
         <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-400/20 rounded-full blur-xl mix-blend-screen"></div>
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-400/20 rounded-full blur-xl mix-blend-screen"></div>
       </section>

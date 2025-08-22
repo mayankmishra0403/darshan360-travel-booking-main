@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
-import { getStop, getStopImageUrl } from '../services/trips';
+import { getStop, getStopImageUrl, getStopVideoUrl } from '../services/trips';
+import { useAuth } from '../context/auth';
 
 export default function StopDetailsPage() {
   const { id } = useParams();
+  const { isAdmin } = useAuth();
   const [stop, setStop] = useState(null);
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
@@ -80,6 +82,7 @@ export default function StopDetailsPage() {
 
   const currentImageId = images.length > 0 ? images[index] : null;
   const imageUrl = currentImageId ? getStopImageUrl(currentImageId, { full: false }) : '';
+  const videoUrl = stop?.videoId ? getStopVideoUrl(stop.videoId) : '';
 
   const variants = {
     enter: (dir) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
@@ -128,8 +131,55 @@ export default function StopDetailsPage() {
 
       <div className="text-gray-700 my-4">{stop.description}</div>
 
-      <div>
+      {/* Video (if present) */}
+      {videoUrl && (
+        <div className="my-6">
+          <h3 className="text-lg font-semibold mb-2">Watch video</h3>
+          <video
+            controls
+            src={videoUrl}
+            className="w-full max-h-96 rounded-lg shadow-md"
+          />
+        </div>
+      )}
+
+      {/* Images gallery */}
+      {images.length > 0 && (
+        <div className="my-6">
+          <h3 className="text-lg font-semibold mb-2">Photos</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {images.map((imgId, i) => (
+              <img
+                key={i}
+                src={getStopImageUrl(imgId, { full: false })}
+                alt={`${stop.name} ${i + 1}`}
+                className="w-full h-40 object-cover rounded-md shadow-sm"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* More details: show only admin-provided `extraDetails` (no legacy fallbacks) */}
+      {stop?.extraDetails && typeof stop.extraDetails === 'string' && stop.extraDetails.trim() && (
+        <div className="my-6">
+          <h3 className="text-lg font-semibold mb-2">More details</h3>
+          <div className="prose max-w-none text-sm text-gray-700">
+            {/* Render plain text while preserving line breaks (avoid injecting HTML) */}
+            {stop.extraDetails.split('\n').map((line, i) => (
+              <p key={i} className="mb-2 break-words">{line}</p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between">
         <Link to={`/trips/${stop.tripId}`} className="text-blue-600 underline">Back to trip</Link>
+        {isAdmin && (
+          <Link to={`/admin?editStop=${stop.id}`} className="text-sm bg-orange-500 text-white px-3 py-1 rounded-md shadow">
+            Edit in Admin panel
+          </Link>
+        )}
       </div>
     </div>
   );

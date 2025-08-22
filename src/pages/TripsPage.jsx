@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TripCard from '../components/TripCard';
 import { listTrips } from '../services/trips';
 import { createBookingWithIdFallback } from '../services/bookings';
@@ -48,8 +48,7 @@ export default function TripsPage() {
 				console.warn('Failed to create payment record', e);
 			}
 
-			const upiLink = 'https://rzp.io/rzp/kPlkKOD';
-			window.open(upiLink, '_blank', 'noopener');
+			// Payment UI will be triggered by the TripCard's hosted button; no shortlink fallback.
 		} catch (err) {
 			console.error('Failed to create fallback booking', err);
 			alert('Failed to create booking. Please try again.');

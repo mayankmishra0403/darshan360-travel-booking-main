@@ -1,0 +1,1 @@
+import{a as s,R as r,d as n}from"./index-CLjvfxVe.js";const o="travel_db",c="68a1e4dd000b208d3eea";async function u({id:a,data:e}){const t=[s.read(r.user(e.userId)),s.update(r.user(e.userId))];return n.createDocument(o,c,a,e,t)}export{u as c};

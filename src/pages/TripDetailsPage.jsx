@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/auth';
 import { getTrip, getTripImageUrls, getStopImageUrl, getStopVideoUrl, getTripVideoUrl, listStopsByTrip } from '../services/trips';
+import { listServicesByTrip } from '../services/content';
 // Local fallback video (used when server fetch not available)
 import localDemoVideo from '../../VN20250817_175526.mp4';
-import { createBookingWithIdFallback } from '../services/bookings';
-import { createPaymentWithId } from '../services/payments';
+// createBookingWithIdFallback is not used in this page; booking creation is handled elsewhere
+import { createRazorpayOrder } from '../services/payment';
+import { openRazorpay } from '../services/razorpay';
 import './TripDetailsPage.css';
 
 import PlaceAmenities from '../components/PlaceAmenities';
@@ -42,6 +44,7 @@ export default function TripDetailsPage() {
   }, [id]);
 
   const [stops, setStops] = useState([]);
+  const [services, setServices] = useState([]);
   const [fallbackVideoSrc, setFallbackVideoSrc] = useState(null);
   const [needsUserPlay, setNeedsUserPlay] = useState(false);
 
@@ -67,6 +70,13 @@ export default function TripDetailsPage() {
           const s = await listStopsByTrip(trip.id);
           console.info('Loaded stops for trip', trip.id, s);
           setStops(s);
+          try {
+            const sv = await listServicesByTrip(trip.id);
+            setServices(sv || []);
+          } catch (e) {
+            console.warn('Failed to load services for trip', e?.message || e);
+            setServices([]);
+          }
         }
       } catch (e) { console.error(e); }
     })();
@@ -378,15 +388,23 @@ export default function TripDetailsPage() {
                 <motion.button
                   onClick={async () => {
                     try {
-                      const now = new Date().toISOString();
-                      const id = `upi_${Date.now()}`;
-                      try {
-                        await createBookingWithIdFallback({ id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'pending', date: now });
-                        try {
-                          await createPaymentWithId({ id, data: { orderId: id, tripId: trip.id, tripTitle: trip.title, userId: user.$id, status: 'created', amount: Number(trip.price) * 100, currency: 'INR', date: now } });
-                        } catch (e) { console.warn('Payment create fallback failed', e?.message || e); }
-                      } catch (e) { console.warn('Book now fallback failed', e?.message || e); }
-                      window.open('https://rzp.io/rzp/kPlkKOD', '_blank', 'noopener');
+                      const order = await createRazorpayOrder({
+                        amount: Number(trip.price) * 100,
+                        currency: 'INR',
+                        receipt: `trip_${trip.id}`,
+                      });
+                      await openRazorpay({
+                        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                        order,
+                        user,
+                        onSuccess: (response) => {
+                          console.log('Payment successful', response);
+                          // Redirection is now handled in razorpay.js
+                        },
+                        onFailure: (error) => {
+                          console.error('Payment failed', error);
+                        },
+                      });
                     } catch (err) { console.error(err); }
                   }}
                   className="bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-xl transition-all"
@@ -455,6 +473,21 @@ export default function TripDetailsPage() {
         className="mt-8"
       >
         <PlaceAmenities hotels={hotels} restaurants={restaurants} foods={foods} />
+        {/* Services we provide for this trip (admin-driven) */}
+        {services && services.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold mb-3">Services we provide for this trip</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {services.map((sv) => (
+                <div key={sv.id} className="border rounded p-3 bg-white">
+                  {sv.imageId && <img src={getStopImageUrl(sv.imageId)} className="w-full h-36 object-cover mb-2 rounded" alt={sv.title} />}
+                  <div className="font-semibold">{sv.title}</div>
+                  <div className="text-sm text-gray-600">{sv.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
     </div>
   );

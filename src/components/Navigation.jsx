@@ -15,9 +15,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">D</span>
-            </div>
+            <img src="/darshan.png" alt="Darshan 360" className="w-8 h-8 object-cover rounded-lg" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Darshan 360
             </span>
@@ -53,6 +51,16 @@ export default function Navigation() {
                 </Link>
               </>
             )}
+            {/* Future launch link (non-functional placeholder for future self-hosting) */}
+            <a
+              href="https://darshan360.in.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-gray-400 italic hover:text-gray-600"
+              title="Future launch (placeholder)"
+            >
+              darshan360.in.net
+            </a>
           </div>
 
           {/* User Actions */}
